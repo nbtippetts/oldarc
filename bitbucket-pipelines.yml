@@ -1,0 +1,173 @@
+# This is a sample build configuration for Python.
+# Check our guides at https://confluence.atlassian.com/x/x4UWN for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: python:3.8.2
+pipelines:
+  default:
+    - parallel:
+      - step:
+          name: update_shipping
+          script:
+            - apt-get update
+            - apt-get install zip -y
+            - zip update_shipping/update_shipping.zip update_shipping/update_shipping.py
+            - pipe: atlassian/aws-lambda-deploy:0.3.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                FUNCTION_NAME: 'update_shipping'
+                COMMAND: 'update'
+                ZIP_FILE: 'update_shipping/update_shipping.zip'
+
+      - step:
+          name: kit_order_lines
+          script:
+            - apt-get update
+            - apt-get install zip -y
+            - zip kit_order_lines/kit_order_lines.zip kit_order_lines/kit_order_lines.py
+            - pipe: atlassian/aws-lambda-deploy:0.3.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                FUNCTION_NAME: 'kit_order_lines'
+                COMMAND: 'update'
+                ZIP_FILE: 'kit_order_lines/kit_order_lines.zip'
+
+      - step:
+          name: get_orderline
+          script:
+            - apt-get update
+            - apt-get install zip -y
+            - zip get_orderline/get_orderline.zip get_orderline/get_orderline.py
+            - pipe: atlassian/aws-lambda-deploy:0.3.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                FUNCTION_NAME: 'get_orderline'
+                COMMAND: 'update'
+                ZIP_FILE: 'get_orderline/get_orderline.zip'
+
+      - step:
+          name: get_order
+          script:
+            - apt-get update
+            - apt-get install zip -y
+            - zip get_order/get_order.zip get_order/get_order.py
+            - pipe: atlassian/aws-lambda-deploy:0.3.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                FUNCTION_NAME: 'get_order'
+                COMMAND: 'update'
+                ZIP_FILE: 'get_order/get_order.zip'
+
+      - step:
+          name: get_kit
+          script:
+            - apt-get update
+            - apt-get install zip -y
+            - zip get_kit/get_kit.zip get_kit/get_kit.py
+            - pipe: atlassian/aws-lambda-deploy:0.3.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                FUNCTION_NAME: 'get_kit'
+                COMMAND: 'update'
+                ZIP_FILE: 'get_kit/get_kit.zip'
+
+      - step:
+          name: get_fulfillment
+          script:
+            - apt-get update
+            - apt-get install zip -y
+            - zip get_fulfillment/get_fulfillment.zip get_fulfillment/get_fulfillment.py
+            - pipe: atlassian/aws-lambda-deploy:0.3.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                FUNCTION_NAME: 'get_fulfillment'
+                COMMAND: 'update'
+                ZIP_FILE: 'get_fulfillment/get_fulfillment.zip'
+
+      - step:
+          name: create_order_for_kit
+          script:
+            - apt-get update
+            - apt-get install zip -y
+            - zip create_order_for_kit/create_order_for_kit.zip create_order_for_kit/create_order_for_kit.py
+            - pipe: atlassian/aws-lambda-deploy:0.3.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                FUNCTION_NAME: 'create_order_for_kit'
+                COMMAND: 'update'
+                ZIP_FILE: 'create_order_for_kit/create_order_for_kit.zip'
+
+      - step:
+          name: create_order
+          script:
+            - apt-get update
+            - apt-get install zip -y
+            - zip create_order/create_order.zip create_order/create_order.py
+            - pipe: atlassian/aws-lambda-deploy:0.3.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                FUNCTION_NAME: 'create_order'
+                COMMAND: 'update'
+                ZIP_FILE: 'create_order/create_order.zip'
+
+      - step:
+          name: cancel_orderline
+          script:
+            - apt-get update
+            - apt-get install zip -y
+            - zip cancel_orderline/cancel_orderline.zip cancel_orderline/cancel_orderline.py
+            - pipe: atlassian/aws-lambda-deploy:0.3.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                FUNCTION_NAME: 'cancel_orderline'
+                COMMAND: 'update'
+                ZIP_FILE: 'cancel_orderline/cancel_orderline.zip'
+
+      - step:
+          name: cancel_kit
+          script:
+            - apt-get update
+            - apt-get install zip -y
+            - zip cancel_kit/cancel_kit.zip cancel_kit/cancel_kit.py
+            - pipe: atlassian/aws-lambda-deploy:0.3.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                FUNCTION_NAME: 'cancel_kit'
+                COMMAND: 'update'
+                ZIP_FILE: 'cancel_kit/cancel_kit.zip'
+
+      - step:
+          name: cancel_fulfillment
+          script:
+            - apt-get update
+            - apt-get install zip -y
+            - zip cancel_fulfillment/cancel_fulfillment.zip cancel_fulfillment/cancel_fulfillment.py
+            - pipe: atlassian/aws-lambda-deploy:0.3.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                FUNCTION_NAME: 'cancel_fulfillment'
+                COMMAND: 'update'
+                ZIP_FILE: 'cancel_fulfillment/cancel_fulfillment.zip'

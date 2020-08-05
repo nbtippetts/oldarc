@@ -1,0 +1,28 @@
+{% extends "water/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form action="{% url 'og-check-water' %}" method="POST">
+	{% csrf_token %}
+	<table>
+		{{ form.as_table }}
+	</table>
+	<input type="submit" value="Submit">
+</form>
+
+{% for water in waters %}
+<article class="media content-section">
+	<div class="media-body">
+		<!-- <div class="article-metadata">
+			<a class="mr-2" href="#">{{ water.last_water }}</a>
+			<small class="text-muted">{{ water.next_water }}</small>
+		</div> -->
+		<h2><a class="article-title" href="#">Water Log</a></h2>
+		<p class="article-content">water_start {{ water.water_start }}</p>
+		<p class="article-content">water_finish {{ water.water_finish }}</p>
+		<p class="article-content">how_often {{ water.how_often }}</p>
+		<p class="article-content">next_water {{ water.next_water }}</p>
+	</div>
+</article>
+{% endfor %}
+{% endblock content %}
