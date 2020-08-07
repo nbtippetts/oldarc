@@ -6,7 +6,6 @@ from .models import Water
 from .forms import WaterForm
 import time
 
-
 def water(request):
 	wat = Water.objects.all().order_by('-water_finish')[:3]
 	context = {
@@ -23,17 +22,17 @@ def check_water(request):
 		# Check if the form is valid:
 		if form.is_valid():
 			# process the data in form.cleaned_data as required (here we just write it to the model due_back field)
-			wat.water_start = form.cleaned_data['water_start']
-			wat.water_deration = form.cleaned_data['water_deration']
-			wat.how_often = form.cleaned_data['how_often']
+			wat.water_start = form['water_start']
+			wat.water_deration = form['water_deration']
+			wat.how_often = form['how_often']
 			wat.save()
 			# redirect to a new URL:
-			return redirect('/')
+			return redirect('check-water/')
 	# If this is a GET (or any other method) create the default form.
 	else:
 		proposed_water_time = wat.water_finish + timedelta(hours=48)
 		form = WaterForm(initial={'water_start': proposed_water_time})
-		print(form.cleaned_data['water_start'])
+		print(form['water_start'])
 		wat_form = Water.objects.all().order_by('-water_finish')[:3]
 	context = {
 		'form': form,
