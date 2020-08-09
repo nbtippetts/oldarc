@@ -1,2 +1,6 @@
 env/
-__pycache__
+./og_kush/og_kush/__pycache__
+./og_kush/water/__pycache__
+./og_kush/water/__pycache__
+.vscode/
+./og_kush/db.sqlite3

@@ -1,7 +1,7 @@
 import datetime
 
 from django import forms
-from .models import Water
+from .models import Water, WaterPump
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
@@ -22,3 +22,14 @@ class WaterForm(forms.Form):
 
 		# Remember to always return the cleaned data.
 		return water_start, water_deration, how_often
+
+
+class WaterPumpForm(forms.Form):
+	pump_status = forms.CharField()
+	class Meta:
+		model = WaterPump
+	def set_status(self):
+		pump_status = self.cleaned_data['pump_status']
+		if pump_status != 'start' or pump_status != 'stop':
+			raise ValidationError(_('Invalid data'))
+		return pump_status
