@@ -76,7 +76,8 @@ coverage.xml
 .python-version 
 
 # celery 
-celerybeat-schedule.* 
+celerybeat-schedule.*
+django_celery_beat.*
 
 # SageMath parsed files 
 *.sage.py 
