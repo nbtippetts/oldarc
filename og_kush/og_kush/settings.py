@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
+    'bootstrap4',
+    'django_forms_bootstrap',
+    'bootstrap_datepicker_plus'
 ]
 
 MIDDLEWARE = [
@@ -78,13 +82,22 @@ WSGI_APPLICATION = 'og_kush.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'OG_DB',
+        'USER': 'og',
+        'PASSWORD': '@Wicked2009',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
-CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_ENABLE_UTC=True
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_TRANSPORT = 'redis'
 
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -117,6 +130,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = False
+
+DJANGO_CELERY_BEAT_TZ_AWARE = False
 
 
 # Static files (CSS, JavaScript, Images)

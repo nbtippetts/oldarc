@@ -1,0 +1,10 @@
+<ul class="list-group">
+	{% for w in latest_waters %}
+		<li class="list-group-item list-group-item-light">GPIO PIN<br>{{ w.gpio_pin }}</li>
+		<li class="list-group-item list-group-item-light">water_start<br>{{ w.water_start }}</li>
+		<li class="list-group-item list-group-item-light">water_deration<br>{{ w.water_deration|time:'H:i' }} HRS</li>
+		<li class="list-group-item list-group-item-light">water_finish<br>{{ w.water_finish }}</li>
+		<li class="list-group-item list-group-item-light">how_often<br>{{ w.how_often|time:'H:i' }} HRS</li>
+		<li class="list-group-item list-group-item-light">next_water<br>{{ w.next_water }}</li>
+	{% endfor %}
+</ul>

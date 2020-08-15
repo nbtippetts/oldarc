@@ -5,5 +5,5 @@ from . import views
 urlpatterns = [
     path('', views.water, name='og-water'),
     path('water_pump/', views.start_pump, name='pump'),
-    path('check-water/', views.check_water, name='og-check-water'),
+    path('check_water/', views.check_water, name='check_water'),
 ]

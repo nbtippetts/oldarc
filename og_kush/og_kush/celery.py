@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import os
 
 from celery import Celery
+# from celery import crontab
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'og_kush.settings')
@@ -14,6 +15,9 @@ app = Celery('og_kush')
 # - namespace='CELERY' means all celery-related configuration keys
 #   should have a `CELERY_` prefix.
 app.config_from_object('django.conf:settings', namespace='CELERY')
+
+
+app.conf.timezone = 'UTC'
 
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
