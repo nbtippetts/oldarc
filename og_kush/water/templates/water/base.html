@@ -13,9 +13,9 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'water/main.css' %}">
 
 	{% if title %}
-	<title>Django Blog - {{ title }}</title>
+	<title>Arc - {{ title }}</title>
 	{% else %}
-	<title>Django Blog</title>
+	<title>Arc</title>
 	{% endif %}
 </head>
 
@@ -23,22 +23,22 @@
 	<header class="site-header">
 		<nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
 			<div class="container">
-				<a class="navbar-brand mr-4" href="{% url 'og-water' %}">Django Blog</a>
+				<a class="navbar-brand mr-2" href="{% url 'og-water' %}">Arc</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
 					aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="collapse navbar-collapse" id="navbarToggle">
 					<div class="navbar-nav mr-auto">
-						<a class="nav-item nav-link" href="{% url 'og-water' %}">Home</a>
+						<a class="nav-item nav-link" href="{% url 'og-humidity' %}">Humidity/Temp Logs</a>
 						<a class="nav-item nav-link" href="{% url 'check_water' %}">Schedule Water</a>
 						<a class="nav-item nav-link" href="{% url 'pump' %}">Turn Water Pump on/off</a>
 					</div>
 					<!-- Navbar Right Side -->
-					<div class="navbar-nav">
+					<!-- <div class="navbar-nav">
 						<a class="nav-item nav-link" href="#">Login</a>
 						<a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</nav>

@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'water.apps.WaterConfig',
     'users.apps.UsersConfig',
+    'humidity.apps.HumidityConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,7 +44,8 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'bootstrap4',
     'django_forms_bootstrap',
-    'bootstrap_datepicker_plus'
+    'bootstrap_datepicker_plus',
+    'chartjs'
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,72 @@
+{% extends 'water/base.html' %}
+{% block content %}
+<h1>Humidity And Tempature Logs</h1>
+
+<canvas id="bar_chart" width="500" height="400"></canvas>
+
+<div class="container" style=" margin-top: 15px;">
+	<div class="row">
+		<table class="table table-bordered">
+			<thead>
+			<tr>
+				<th>Humidity %</th>
+				<th>Temp *C</th>
+				<th>TimeStamp</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for d in data %}
+			<tr>
+				<td>{{ d.humidity }}</td>
+				<td>{{ d.temp }}</td>
+				<td>{{ d.created_at }}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script type="text/javascript">
+	var chartColors = {
+		red: 'rgb(255, 99, 132)',
+		blue: 'rgb(54, 162, 235)'
+	};
+	var humid_colors = [chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue]
+	var temp_colors = [chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue]
+	var ctx_bar = document.getElementById('bar_chart').getContext('2d');
+	var bar_chart = new Chart(ctx_bar, {
+		type: 'bar',
+		data: {
+			labels: [{% for d in data %} "{{ d.created_at }}", {% endfor %}],
+			datasets: [{
+				label: 'Humidity %',
+				data: [{% for hum in data %} "{{ hum.humidity }}", {% endfor %}],
+				backgroundColor: humid_colors
+			}, {
+				label: 'Temp *C',
+				data: [{% for t in data %} "{{ t.temp }}", {% endfor %}],
+				backgroundColor: temp_colors
+			}]
+		}
+	});
+	var humid_value = 38; //set this to whatever is the deciding color change value
+	var dataset_humid = bar_chart.data.datasets[0];
+	for (var i = 0; i < dataset_humid.data.length; i++) {
+		if (dataset_humid.data[i] >= humid_value) {
+			dataset_humid.backgroundColor[i] = chartColors.red;
+		}
+	}
+	var temp_value = 28;
+	var dataset_temp = bar_chart.data.datasets[1];
+	for (var i = 0; i < dataset_temp.data.length; i++) {
+		if (dataset_temp.data[i] >= temp_value) {
+			dataset_temp.backgroundColor[i] = chartColors.red;
+		}
+	}
+	bar_chart.update();
+
+</script>
+
+{% endblock content %}

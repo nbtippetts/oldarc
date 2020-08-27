@@ -16,7 +16,12 @@ app = Celery('og_kush')
 #   should have a `CELERY_` prefix.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
-
+app.conf.beat_schedule = {
+    'add-every-20-seconds': {
+        'task': 'humidity.tasks.log_humidity_temp',
+        'schedule': 20
+    },
+}
 app.conf.timezone = 'UTC'
 
 # Load task modules from all registered Django app configs.
