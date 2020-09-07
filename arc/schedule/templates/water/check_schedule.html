@@ -1,0 +1,26 @@
+{% extends "water/base.html" %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{{ form.media }}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form action="{% url 'check_water' %}" method="POST">
+	{% csrf_token %}
+	{% bootstrap_form form %}
+	<input type="submit" value="Submit">
+</form>
+
+{% for water in waters %}
+<article class="media content-section">
+	<div class="media-body">
+		<h2 class="article-title">Water Log: {{ water.start_date }}</h2>
+		<p class="article-content">start {{ water.start }}</p>
+		<p class="article-content">deration {{ water.deration|time:'H:i' }} HRS</p>
+		<p class="article-content">finish {{ water.finish }}</p>
+		<p class="article-content">how_often {{ water.how_often|time:'H:i' }} HRS</p>
+	</div>
+</article>
+{% endfor %}
+{% endblock content %}

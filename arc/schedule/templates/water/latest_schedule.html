@@ -1,0 +1,10 @@
+<ul class="list-group">
+	{% for w in latest_schedule %}
+		<li class="list-group-item list-group-item-light">GPIO PIN<br>{{ w.gpio_pin }}</li>
+		<li class="list-group-item list-group-item-light">start<br>{{ w.start }}</li>
+		<li class="list-group-item list-group-item-light">deration<br>{{ w.deration|time:'H:i' }} HRS</li>
+		<li class="list-group-item list-group-item-light">finish<br>{{ w.finish }}</li>
+		<li class="list-group-item list-group-item-light">how_often<br>{{ w.how_often|time:'H:i' }} HRS</li>
+		<li class="list-group-item list-group-item-light">next_water<br>{{ w.next_water }}</li>
+	{% endfor %}
+</ul>
