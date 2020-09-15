@@ -13,21 +13,24 @@ from gpiozero import LED, Button, Servo
 @shared_task
 def start_task(**kwargs):
 	print(kwargs['pin'])
-	schedule_obj = Schedule.objects.last()
-	now_time = datetime.now().time()
-	now_date = datetime.now()
-	t = datetime.combine(date.min, schedule_obj.deration) - datetime.min
-	while now_time > schedule_obj.start and now_time < schedule_obj.finish:
-		try:
+	if 'pin' in kwargs:
+		schedule_obj = Schedule.objects.last()
+		now_time = datetime.now().time()
+		now_date = datetime.now()
+		t = datetime.combine(date.min, schedule_obj.deration) - datetime.min
+		while now_time > schedule_obj.start and now_time < schedule_obj.finish:
+			try:
+				relay = gpiozero.OutputDevice(kwargs['pin'], active_high=False, initial_value=False)
+				relay.on()
+				time.sleep(t.seconds)
+			except gpiozero.exc.GPIOPinInUse as e:
+				print(e)
+				return
+		else:
 			relay = gpiozero.OutputDevice(kwargs['pin'], active_high=False, initial_value=False)
-			relay.on()
-			time.sleep(t.seconds)
-		except gpiozero.exc.GPIOPinInUse as e:
-			print(e)
-			return
+			relay.off()
 	else:
-		relay = gpiozero.OutputDevice(kwargs['pin'], active_high=False, initial_value=False)
-		relay.off()
+		return "No GPIO in args."
 
 
 @shared_task

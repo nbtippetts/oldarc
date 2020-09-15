@@ -76,7 +76,7 @@ def check_schedule(request):
 				p = PeriodicTask.objects.get_or_create(
 					interval=schedule,
 					name=form.cleaned_data['name'],
-					task=form.cleaned_data['task_name'],
+					task='schedule.tasks.start_task',
 					kwargs=json.dumps({
 						'pin': form.cleaned_data['gpio_pin'],
 						'deration': form.cleaned_data['deration']
@@ -104,19 +104,19 @@ def check_schedule(request):
 				date.min, often.time()) - datetime.min
 			next_time = finish_time + nw
 			print(next_time)
-			water = Water(
+			schedule = Schedule(
 				start_date=form.cleaned_data['start_date'],
 				start = form.cleaned_data['start'],
 				how_often = form.cleaned_data['how_often'],
 				deration = form.cleaned_data['deration'],
 				finish = finish_time,
-				next_water=next_time,
+				next_schedule=next_time,
 				gpio_pin = form.cleaned_data['gpio_pin']
 			)
-			water.save()
+			schedule.save()
 			time.sleep(2)
 			start_task.delay()
-			latest = Water.objects.all().order_by('-id')
+			latest = Schedule.objects.all().order_by('-id')
 			context = {
 				'form': form,
 				'waters': latest

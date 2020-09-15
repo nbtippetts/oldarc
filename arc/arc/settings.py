@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'humidity.apps.HumidityConfig',
     'schedule.apps.ScheduleConfig',
+    'video.apps.VideoConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -93,7 +94,8 @@ DATABASES = {
 }
 
 CELERY_ENABLE_UTC = True
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = "redis://redis:6379"
 CELERY_BROKER_TRANSPORT = 'redis'
 
 BOOTSTRAP4 = {

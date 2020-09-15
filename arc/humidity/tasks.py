@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 from django_celery_beat.models import PeriodicTasks, PeriodicTask, IntervalSchedule
 from celery import shared_task
-from og_kush.celery import app
+from arc.celery import app
 from django.db import connection
 from datetime import datetime, timedelta, date
 from .models import HumidityTemp
@@ -25,4 +25,5 @@ def log_humidity_temp():
 			return hum, temperature
 		else:
 			print("Failed to retrieve data from humidity sensor, Retry")
+			return
 	return

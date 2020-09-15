@@ -1,0 +1,15 @@
+Django==3.0.5
+celery==4.4.1
+redis==3.4.1
+RPi.GPIO==0.7.0
+gpiozero==1.5.1
+Adafruit-DHT==1.4.0
+django-celery-beat==2.0.0
+django-bootstrap-datepicker-plus==3.0.5
+django-bootstrap4==2.2.0
+django-chartjs==2.2.1
+django-crispy-forms==1.9.2
+django-forms-bootstrap==3.1.0
+django-timedeltafield==0.7.10
+django-timezone-field==4.0
+psycopg2==2.8.5

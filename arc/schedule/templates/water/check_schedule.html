@@ -6,7 +6,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<form action="{% url 'check_water' %}" method="POST">
+<form action="{% url 'check_schedule' %}" method="POST">
 	{% csrf_token %}
 	{% bootstrap_form form %}
 	<input type="submit" value="Submit">

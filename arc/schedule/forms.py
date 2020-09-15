@@ -70,7 +70,7 @@ class ScheduleForm(forms.Form):
 		choices=select_gpio_pin
 	)
 	name = forms.CharField()
-	task_name = forms.CharField()
+	# task_name = forms.CharField()
 
 	def schedule_time(self):
 		start_date = self.cleaned_data['start_date']
