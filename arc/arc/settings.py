@@ -25,7 +25,7 @@ SECRET_KEY = 'if&(y*+3iya!ix#)xh=ycq5y&8i36@exr&kkl_og2_7$(##u(q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -84,18 +84,26 @@ WSGI_APPLICATION = 'arc.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'OG_DB',
         'USER': 'og',
-        'PASSWORD': '@Wicked2009',
         'HOST': 'localhost',
         'PORT': '',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'HOST': 'db',
+#         'PORT': 5432,
+#     }
+# }
 
 CELERY_ENABLE_UTC = True
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = "redis://redis:6379/0"
 CELERY_BROKER_TRANSPORT = 'redis'
 
 BOOTSTRAP4 = {
@@ -140,4 +148,4 @@ DJANGO_CELERY_BEAT_TZ_AWARE = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/usr/src/app/static/'

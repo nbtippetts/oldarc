@@ -1,13 +1,14 @@
 dump.rdb
-og_kush/dump.rdb
-og_kush/django_celery_beat.schedulers:DatabaseScheduler.db
+arc/celerybeat-schedule
+arc/dump.rdb
+arc/django_celery_beat.schedulers:DatabaseScheduler.db
 .vscode/
 env/
-./og_kush/og_kush/__pycache__
-./og_kush/water/__pycache__
-./og_kush/water/__pycache__
+./arc/arc/__pycache__
+./arc/water/__pycache__
+./arc/water/__pycache__
 .vscode/
-./og_kush/db.sqlite3
+./arc/db.sqlite3
 # Django #
 *.log
 *.pot

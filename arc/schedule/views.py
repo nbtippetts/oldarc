@@ -8,7 +8,7 @@ from .forms import ScheduleForm, WaterPumpForm
 import time
 import json
 import gpiozero
-from gpiozero import LED, Button, Servo
+from gpiozero import LED, Button
 from .tasks import relay_task, start_task
 
 def schedule(request):
@@ -33,8 +33,6 @@ def start_pump(request):
 				)
 				water_pump.save()
 				relay_task.delay(True, pump_form.cleaned_data['gpio_pin'])
-				servo = Servo(26)
-				servo.max()
 			if pump_form.cleaned_data['pump_status'] == 'stop':
 				water_pump = WaterPump.objects.filter(
 					gpio_pin=pump_form.cleaned_data['gpio_pin']).latest('pump_start')
@@ -42,8 +40,6 @@ def start_pump(request):
 				water_pump.pump_finish = datetime.now()
 				water_pump.save()
 				relay_task.delay(False, pump_form.cleaned_data['gpio_pin'])
-				servo = Servo(26)
-				servo.detach()
 
 			context = {
 				'waters': wat,
