@@ -23,5 +23,5 @@ urlpatterns = [
     path('register/', user_views.register, name='register'),
     path('schedule/', include('schedule.urls')),
     path('humidity/', include('humidity.urls')),
-    path('video/', include('video.urls')),
+    path('streamapp/', include('streamapp.urls')),
 ]

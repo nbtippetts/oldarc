@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -33,7 +34,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'humidity.apps.HumidityConfig',
     'schedule.apps.ScheduleConfig',
-    'video.apps.VideoConfig',
+    'streamapp.apps.StreamappConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -102,9 +103,14 @@ DATABASES = {
 # }
 
 CELERY_ENABLE_UTC = True
-CELERY_BROKER_URL = 'redis://redis:6379/0'
-CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
 CELERY_BROKER_TRANSPORT = 'redis'
+
+# CELERY_ENABLE_UTC = True
+# CELERY_BROKER_URL = 'redis://redis:6379/0'
+# CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+# CELERY_BROKER_TRANSPORT = 'redis'
 
 BOOTSTRAP4 = {
     'include_jquery': True,
@@ -148,4 +154,10 @@ DJANGO_CELERY_BEAT_TZ_AWARE = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/usr/src/app/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+# STATIC_URL = '/usr/src/app/static/'
+# MEDIA_URL = '/usr/src/app/media/'
