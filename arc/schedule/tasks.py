@@ -4,11 +4,13 @@ from arc.celery import app
 from django.db import connection
 from datetime import datetime, timedelta, date
 from .models import Schedule, WaterPump
-from django_celery_beat.models import PeriodicTasks, PeriodicTask, IntervalSchedule
 import time
 import gpiozero
-from gpiozero import LED, Button, Servo
+from signal import pause
+import redis
+from signal import pause
 
+rdb = redis.Redis(host='localhost',port=6379,db=0)
 
 @shared_task
 def start_task(**kwargs):
@@ -33,8 +35,18 @@ def start_task(**kwargs):
 		return "No GPIO in args."
 
 
-@shared_task
-def relay_task(status,pin):
+@app.task(bind=True)
+def relay_task(self, status,pin):
+	if status and pin == '18':
+		rdb.set("relay_key","ON")
+	if not status and pin == '18':
+		rdb.set("relay_key","OFF")
 	relay = gpiozero.OutputDevice(pin, active_high=False, initial_value=False)
-	while status:
+	if status:
 		relay.on()
+	else:
+		relay.off()
+		return "Relay OFF"
+	pause()
+	return 'END TASK'
+

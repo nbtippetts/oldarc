@@ -18,11 +18,4 @@ def video_feed(request):
 	return StreamingHttpResponse(gen(VideoCamera()),
 					content_type='multipart/x-mixed-replace; boundary=frame')
 
-# def capture_frame(request):
-# 	image = gen(CaptureFrame())
-# 	return render(request, 'streamapp/home.html', {'image':image})
-
-# def webcam_feed(request):
-# 	return StreamingHttpResponse(gen(IPWebCam()),
-# 					content_type='multipart/x-mixed-replace; boundary=frame')
 

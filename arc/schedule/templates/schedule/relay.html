@@ -1,4 +1,4 @@
-{% extends "water/base.html" %}
+{% extends "schedule/base.html" %}
 {% load bootstrap4 %}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
@@ -6,7 +6,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<form action="{% url 'pump' %}" method="POST">
+<form action="{% url 'relay' %}" method="POST">
 	{% csrf_token %}
 	{% bootstrap_form form %}
 	<!-- <input id="key" type="text" name="pump_status"> -->

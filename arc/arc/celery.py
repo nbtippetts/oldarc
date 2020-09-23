@@ -16,12 +16,7 @@ app = Celery('arc')
 #   should have a `CELERY_` prefix.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
-app.conf.beat_schedule = {
-    'add-every-20-seconds': {
-        'task': 'humidity.tasks.log_humidity_temp',
-        'schedule': 20
-    },
-}
+
 app.conf.timezone = 'UTC'
 
 # Load task modules from all registered Django app configs.
@@ -30,4 +25,4 @@ app.autodiscover_tasks()
 
 @app.task(bind=True)
 def debug_task(self):
-    print('Request: {0!r}'.format(self.request))
+	print('Request: {0!r}'.format(self.request))

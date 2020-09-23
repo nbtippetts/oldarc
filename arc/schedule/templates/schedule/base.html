@@ -10,7 +10,7 @@
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link rel="stylesheet" type="text/css" href="{% static 'water/main.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'schedule/main.css' %}">
 
 	{% if title %}
 	<title>Arc - {{ title }}</title>
@@ -30,9 +30,10 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarToggle">
 					<div class="navbar-nav mr-auto">
-						<a class="nav-item nav-link" href="{% url 'og-humidity' %}">Humidity/Temp Logs</a>
+						<a class="nav-item nav-link" href="{% url 'humidity_view' %}">Humidity/Temp Logs</a>
 						<a class="nav-item nav-link" href="{% url 'check_schedule' %}">Schedule Water</a>
-						<a class="nav-item nav-link" href="{% url 'pump' %}">Turn Water Pump on/off</a>
+						<a class="nav-item nav-link" href="{% url 'relay' %}">Relay On/Off</a>
+						<a class="nav-item nav-link" href="{% url 'video_view' %}">WebCam</a>
 					</div>
 					<!-- Navbar Right Side -->
 					<!-- <div class="navbar-nav">

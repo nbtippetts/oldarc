@@ -1,19 +1,16 @@
 from datetime import datetime, timedelta, time
 from django import forms
 from .models import Schedule, WaterPump
-from django_celery_beat.models import PeriodicTasks, PeriodicTask, IntervalSchedule
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-
+on_off_gpio = (
+	(True, 'Start'),
+	(False, 'Stop'),
+)
 select_gpio_pin = (
-	(14, 'pin14 - Relay 1'),
-	(15, 'pin15 - Relay 2'),
-	(18, 'pin18 - Relay 3'),
-	(23, 'pin23 - Relay 4'),
-	(24, 'pin24 - Relay 5'),
-	(25, 'pin25 - Relay 6'),
-	(8, 'pin8 - Relay 7'),
-	# (7, 'pin7 - Relay 8'),
+	(14, 'Lights'),
+	(15, 'Pump'),
+	(18, 'Fans'),
 )
 select_duration = (
 	(timedelta(minutes=30), '00:30'),
@@ -69,8 +66,6 @@ class ScheduleForm(forms.Form):
 	gpio_pin = forms.ChoiceField(
 		choices=select_gpio_pin
 	)
-	name = forms.CharField()
-	# task_name = forms.CharField()
 
 	def schedule_time(self):
 		start_date = self.cleaned_data['start_date']
@@ -84,14 +79,12 @@ class ScheduleForm(forms.Form):
 
 
 class WaterPumpForm(forms.Form):
-	pump_status = forms.CharField()
+	relay_status = forms.ChoiceField(
+		choices=on_off_gpio
+	)
 	gpio_pin = forms.ChoiceField(
 		choices=select_gpio_pin
 	)
 	class Meta:
 		model = WaterPump
-	def set_status(self):
-		pump_status = self.cleaned_data['pump_status']
-		if pump_status != 'start' or pump_status != 'stop':
-			raise ValidationError(_('Invalid data'))
-		return pump_status
+

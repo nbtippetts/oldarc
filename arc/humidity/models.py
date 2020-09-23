@@ -9,3 +9,8 @@ class HumidityTemp(models.Model):
 
 	def __str__(self):
 		return self.humidity, self.temp
+
+class HumidityTempValues(models.Model):
+	humidity_value = models.DecimalField(max_digits=6, decimal_places=2)
+	temp_value = models.DecimalField(max_digits=6, decimal_places=2)
+	created_at = models.DateTimeField(default=timezone.now)

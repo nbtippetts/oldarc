@@ -1,18 +1,16 @@
 # pull official base image
-FROM python:3.7-buster
+FROM balenalib/raspberry-pi-debian-python:latest
+
+RUN apt-get update && apt-get upgrade
+RUN apt-get install -y python3-dev gcc python3-opencv \
+		libhdf5-dev libhdf5-serial-dev libatlas-base-dev \
+		libjasper-dev libqtgui4 libqt4-test
 
 # set work directory
 WORKDIR /usr/src/app
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
 # install dependencies
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir rpi.gpio
-RUN pip install numpy
-RUN pip install opencv-contrib-python
 COPY ./requirements.txt /usr/src/app/requirements.txt
 RUN pip install -r requirements.txt
 

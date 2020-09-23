@@ -1,3 +1,4 @@
+arc/celerybeat.pid
 dump.rdb
 arc/celerybeat-schedule
 arc/dump.rdb

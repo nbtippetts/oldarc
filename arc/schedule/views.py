@@ -8,7 +8,6 @@ from .forms import ScheduleForm, WaterPumpForm
 import time
 import json
 import gpiozero
-from gpiozero import LED, Button
 from .tasks import relay_task, start_task
 
 def schedule(request):
@@ -16,27 +15,27 @@ def schedule(request):
 	context = {
 		'waters': schedule_obj,
 	}
-	return render(request, 'water/schedule.html', context)
+	return render(request, 'schedule/schedule.html', context)
 
-def start_pump(request):
+def relay_on_off(request):
 	wat = Schedule.objects.all().order_by('-finish')[:3]
 	if request.method == 'POST':
 		pump_form = WaterPumpForm(request.POST)
 		if pump_form.is_valid():
 			stat = False
-			if pump_form.cleaned_data['pump_status'] == 'start':
+			if pump_form.cleaned_data['relay_status'] == 'True':
 				water_pump = WaterPump(
-					pump_status=pump_form.cleaned_data['pump_status'],
+					pump_status=pump_form.cleaned_data['relay_status'],
 					pump_start = datetime.now(),
 					pump_finish=datetime.now(),
 					gpio_pin=pump_form.cleaned_data['gpio_pin']
 				)
 				water_pump.save()
 				relay_task.delay(True, pump_form.cleaned_data['gpio_pin'])
-			if pump_form.cleaned_data['pump_status'] == 'stop':
+			if pump_form.cleaned_data['relay_status'] == 'False':
 				water_pump = WaterPump.objects.filter(
 					gpio_pin=pump_form.cleaned_data['gpio_pin']).latest('pump_start')
-				water_pump.pump_status = pump_form.cleaned_data['pump_status']
+				water_pump.pump_status = pump_form.cleaned_data['relay_status']
 				water_pump.pump_finish = datetime.now()
 				water_pump.save()
 				relay_task.delay(False, pump_form.cleaned_data['gpio_pin'])
@@ -45,15 +44,15 @@ def start_pump(request):
 				'waters': wat,
 				'form': pump_form
 			}
-			return render(request, 'water/water_pump.html', context)
+			return render(request, 'schedule/relay.html', context)
 	form = WaterPumpForm(initial={
-		'pump_status': 'stop',
+		'relay_status': 'False',
 	})
 	context = {
 		'waters': wat,
 		'form': form
 	}
-	return render(request, 'water/water_pump.html', context)
+	return render(request, 'schedule/relay.html', context)
 
 
 def check_schedule(request):
@@ -117,7 +116,7 @@ def check_schedule(request):
 				'form': form,
 				'waters': latest
 			}
-			return render(request, 'water/check_schedule.html', context)
+			return render(request, 'schedule/check_schedule.html', context)
 	# If this is a GET (or any other method) create the default form.
 	else:
 		wat = Schedule.objects.last()
@@ -133,4 +132,4 @@ def check_schedule(request):
 			'form': form,
 			'waters': wat_form,
 		}
-	return render(request, 'water/check_schedule.html', context)
+	return render(request, 'schedule/check_schedule.html', context)
