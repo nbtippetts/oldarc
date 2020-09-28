@@ -3,7 +3,7 @@ from django.utils import timezone
 
 
 class WaterPump(models.Model):
-	pump_status = models.CharField(max_length=225, default='stop')
+	pump_status = models.CharField(max_length=225, default='False')
 	pump_start = models.DateTimeField(default=timezone.now)
 	pump_finish = models.DateTimeField(default=timezone.now)
 	gpio_pin = models.IntegerField(default=0)

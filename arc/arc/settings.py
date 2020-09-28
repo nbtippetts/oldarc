@@ -26,7 +26,7 @@ SECRET_KEY = 'if&(y*+3iya!ix#)xh=ycq5y&8i36@exr&kkl_og2_7$(##u(q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'redis']
 
 
 # Application definition
@@ -83,34 +83,36 @@ WSGI_APPLICATION = 'arc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'OG_DB',
-        'USER': 'og',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'postgres',
-#         'USER': 'postgres',
-#         'HOST': 'db',
-#         'PORT': 5432,
+#         'NAME': 'OG_DB',
+#         'USER': 'og',
+#         'HOST': 'localhost',
+#         'PORT': '',
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'HOST': 'db',
+        'PORT': 5432,
+    }
+}
 
-CELERY_ENABLE_UTC = True
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
-CELERY_BROKER_TRANSPORT = 'redis'
+CELERYD_TASK_SOFT_TIME_LIMIT = 31
 
 # CELERY_ENABLE_UTC = True
-# CELERY_BROKER_URL = 'redis://redis:6379/0'
-# CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
 # CELERY_BROKER_TRANSPORT = 'redis'
+
+CELERY_ENABLE_UTC = True
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+CELERY_BROKER_TRANSPORT = 'redis'
 
 BOOTSTRAP4 = {
     'include_jquery': True,
@@ -155,9 +157,7 @@ DJANGO_CELERY_BEAT_TZ_AWARE = False
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = '/'
 STATIC_URL = '/static/'
-# STATIC_URL = '/usr/src/app/static/'
 # MEDIA_URL = '/usr/src/app/media/'
+# STATIC_URL = '/usr/src/app/static/'

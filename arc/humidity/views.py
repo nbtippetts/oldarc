@@ -3,12 +3,22 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import HumidityTemp, HumidityTempValues
 from .forms import HumidityTempForm
 from .hum_temp import get_humidity_temperature
+import datetime
 
 def humidity(request):
 	current_humidity, current_temp = get_humidity_temperature()
 	form = HumidityTempForm()
 	data = HumidityTemp.objects.all().order_by('-created_at')[:10]
-	current_values = HumidityTempValues.objects.get(pk=1) 
+	try:
+		current_values = HumidityTempValues.objects.get(pk=1) 
+	except Exception as e:
+		h = HumidityTempValues(
+			humidity_value=0.0,
+			temp_value=0.0
+		)
+		h.save()
+		current_values = HumidityTempValues.objects.get(pk=1) 
+		pass
 	context = {'data': data,
 	'form':form,
 	'current_humidity':current_humidity,

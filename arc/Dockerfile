@@ -1,26 +1,30 @@
 # pull official base image
-FROM balenalib/raspberry-pi-debian-python:latest
+FROM balenalib/raspberry-pi-debian:latest
 
-RUN apt-get update && apt-get upgrade
-RUN apt-get install -y python3-dev gcc python3-opencv \
+RUN apt-get update -y
+RUN apt-get install -y python3 python-pip-whl python3-pip
+RUN apt-get install -y build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev \
 		libhdf5-dev libhdf5-serial-dev libatlas-base-dev \
 		libjasper-dev libqtgui4 libqt4-test
-
+RUN apt-get install -y python3-dev gcc
+RUN apt-get install -y python-opencv
+RUN apt-get install -y python3-venv
+# RUN apt-get install libpq-dev
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 # set work directory
-WORKDIR /usr/src/app
-
+WORKDIR /code
+RUN pip -V
 # install dependencies
-RUN pip install --upgrade pip
-COPY ./requirements.txt /usr/src/app/requirements.txt
+COPY ./requirements.txt /code/requirements.txt
 RUN pip install -r requirements.txt
-
-# copy entrypoint.sh
-COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
 # copy project
-COPY ./arc /usr/src/app/
+COPY ./arc /code/
+RUN python -V
+COPY ./platform_detect.py /opt/venv/lib/python3.7/site-packages/Adafruit_DHT/platform_detect.py
 
-# run entrypoint.sh
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+EXPOSE 8000
 
 
 

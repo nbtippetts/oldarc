@@ -1,6 +1,5 @@
 
 from imutils.video import VideoStream
-import numpy as np
 from django.conf import settings
 import threading
 import argparse
@@ -43,36 +42,3 @@ class CaptureFrame(object):
 		write_image = cv2.imwrite("/static/images/room.jpg",image)
 		print(write_image)
 		return write_image
-
-# class IPWebCam(object):
-# 	def __init__(self):
-# 		self.url = "http://192.168.0.100:8080/shot.jpg"
-
-# 	def __del__(self):
-# 		cv2.destroyAllWindows()
-
-# 	def get_frame(self):
-# 		imgResp = urllib.request.urlopen(self.url)
-# 		imgNp = np.array(bytearray(imgResp.read()),dtype=np.uint8)
-# 		img= cv2.imdecode(imgNp,-1)
-# 		# We are using Motion JPEG, but OpenCV defaults to capture raw images,
-# 		# so we must encode it into JPEG in order to correctly display the
-# 		# video stream
-# 		gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-# 		resize = cv2.resize(img, (640, 480), interpolation = cv2.INTER_LINEAR) 
-# 		frame_flip = cv2.flip(resize,1)
-# 		ret, jpeg = cv2.imencode('.jpg', frame_flip)
-# 		return jpeg.tobytes()
-
-# class LiveWebCam(object):
-# 	def __init__(self):
-# 		self.url = cv2.VideoCapture("rtsp://admin:Mumbai@123@203.192.228.175:554/")
-
-# 	def __del__(self):
-# 		cv2.destroyAllWindows()
-
-# 	def get_frame(self):
-# 		success,imgNp = self.url.read()
-# 		resize = cv2.resize(imgNp, (640, 480), interpolation = cv2.INTER_LINEAR) 
-# 		ret, jpeg = cv2.imencode('.jpg', resize)
-# 		return jpeg.tobytes()

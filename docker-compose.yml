@@ -3,13 +3,13 @@ version: '3'
 services:
   web:
     build: ./arc
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "while !</dev/tcp/db/5432; do sleep 1; done; python /code/manage.py migrate --noinput && python /code/manage.py runserver 0.0.0.0:8000"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
     privileged: true
     volumes:
-      - ./arc/:/usr/src/app/
+      - ./arc/:/code/
     ports:
       - "8000:8000"
     depends_on:
@@ -29,13 +29,13 @@ services:
 
   celery:
     build: ./arc
-    command: celery -A arc worker -l info
+    command: celery -A arc worker -l info --concurrency=4
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
     privileged: true
     volumes:
-      - ./arc/:/usr/src/app/
+      - ./arc/:/code/
     links:
       - redis
     depends_on:
@@ -50,7 +50,7 @@ services:
       - "/dev/mem:/dev/mem"
     privileged: true
     volumes:
-      - ./arc/:/usr/src/app/
+      - ./arc/:/code/
     links:
       - redis
     depends_on:

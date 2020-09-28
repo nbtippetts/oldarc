@@ -33,12 +33,15 @@ def relay_on_off(request):
 				water_pump.save()
 				relay_task.delay(True, pump_form.cleaned_data['gpio_pin'])
 			if pump_form.cleaned_data['relay_status'] == 'False':
-				water_pump = WaterPump.objects.filter(
-					gpio_pin=pump_form.cleaned_data['gpio_pin']).latest('pump_start')
-				water_pump.pump_status = pump_form.cleaned_data['relay_status']
-				water_pump.pump_finish = datetime.now()
-				water_pump.save()
-				relay_task.delay(False, pump_form.cleaned_data['gpio_pin'])
+				try:
+					water_pump = WaterPump.objects.filter(
+						gpio_pin=pump_form.cleaned_data['gpio_pin']).latest('pump_start')
+					water_pump.pump_status = pump_form.cleaned_data['relay_status']
+					water_pump.pump_finish = datetime.now()
+					water_pump.save()
+					relay_task.delay(False, pump_form.cleaned_data['gpio_pin'])
+				except Exception as e:
+					pass
 
 			context = {
 				'waters': wat,

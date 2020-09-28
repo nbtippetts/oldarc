@@ -10,7 +10,7 @@ from signal import pause
 import redis
 from signal import pause
 
-rdb = redis.Redis(host='localhost',port=6379,db=0)
+rdb = redis.Redis(host='redis',port=6379,db=0)
 
 @shared_task
 def start_task(**kwargs):
@@ -35,7 +35,7 @@ def start_task(**kwargs):
 		return "No GPIO in args."
 
 
-@app.task(bind=True)
+@app.task(bind=True, soft_time_limit=90000)
 def relay_task(self, status,pin):
 	if status and pin == '18':
 		rdb.set("relay_key","ON")
@@ -46,7 +46,7 @@ def relay_task(self, status,pin):
 		relay.on()
 	else:
 		relay.off()
-		return "Relay OFF"
+		return "User Relay OFF"
 	pause()
 	return 'END TASK'
 

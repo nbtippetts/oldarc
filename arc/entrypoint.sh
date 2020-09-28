@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # wait for Postgres to start
 sleep 15

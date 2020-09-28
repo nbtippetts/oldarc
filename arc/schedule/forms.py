@@ -9,8 +9,7 @@ on_off_gpio = (
 )
 select_gpio_pin = (
 	(14, 'Lights'),
-	(15, 'Pump'),
-	(18, 'Fans'),
+	(15, 'Pump')
 )
 select_duration = (
 	(timedelta(minutes=30), '00:30'),
