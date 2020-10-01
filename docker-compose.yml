@@ -3,7 +3,7 @@ version: '3'
 services:
   web:
     build: ./arc
-    command: bash -c "while !</dev/tcp/db/5432; do sleep 1; done; python /code/manage.py migrate --noinput && python /code/manage.py runserver 0.0.0.0:8000"
+    command: bash -c "while !</dev/tcp/db/5432; do sleep 1; done; python /code/manage.py makemigrations && python /code/manage.py migrate --noinput && python /code/manage.py runserver 0.0.0.0:8000"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
@@ -41,6 +41,7 @@ services:
     depends_on:
       - db
       - redis
+      - web
 
   celery-beat:
     build: ./arc
@@ -56,3 +57,4 @@ services:
     depends_on:
       - db
       - redis
+      - web
