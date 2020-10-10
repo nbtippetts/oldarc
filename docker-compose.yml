@@ -2,6 +2,7 @@ version: '3'
 
 services:
   web:
+    restart: always
     build: ./arc
     command: bash -c "while !</dev/tcp/db/5432; do sleep 1; done; python /code/manage.py makemigrations && python /code/manage.py migrate --noinput && python /code/manage.py runserver 0.0.0.0:8000"
     devices:
@@ -17,17 +18,31 @@ services:
       - redis
 
   db:
+    restart: always
     image: postgres
     environment:
-      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgress
+      - POSTGRES_DB=postgres
+    ports:
+      - "5433:5432"
+    expose:
+      - "5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
   redis:
+    restart: always
     image: redis:alpine
     expose:
       - '6379'
     ports:
       - '6379:6379'
+    volumes:
+     - redisdata:/data
 
   celery:
+    restart: always
     build: ./arc
     command: celery -A arc worker -l info --concurrency=4
     devices:
@@ -44,6 +59,7 @@ services:
       - web
 
   celery-beat:
+    restart: always
     build: ./arc
     command: celery -A arc beat -l info
     devices:
@@ -58,3 +74,7 @@ services:
       - db
       - redis
       - web
+
+volumes:
+    pgdata:
+    redisdata:
