@@ -10,14 +10,14 @@ def humidity(request):
 	form = HumidityTempForm()
 	data = HumidityTemp.objects.all().order_by('-created_at')[:10]
 	try:
-		current_values = HumidityTempValues.objects.get(pk=1) 
+		current_values = HumidityTempValues.objects.get(pk=1)
 	except Exception as e:
 		h = HumidityTempValues(
 			humidity_value=0.0,
 			temp_value=0.0
 		)
 		h.save()
-		current_values = HumidityTempValues.objects.get(pk=1) 
+		current_values = HumidityTempValues.objects.get(pk=1)
 		pass
 	context = {'data': data,
 	'form':form,
@@ -31,7 +31,7 @@ def set_humidity_temp(request):
 	if request.method == 'POST':
 		form = HumidityTempForm(request.POST)
 		if form.is_valid():
-			data = HumidityTempValues.objects.get(pk=1) 
+			data = HumidityTempValues.objects.get(pk=1)
 			data.humidity_value = form.cleaned_data['humidity_value']
 			data.temp_value = form.cleaned_data['temp_value']
 			data.save()
@@ -44,4 +44,3 @@ def set_humidity_temp(request):
 		ht_obj = HumidityTemp.objects.all().order_by('-created_at')[:10]
 		context = {'data': ht_obj,'form':form}
 		return redirect('humidity_view')
-

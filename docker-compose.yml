@@ -44,7 +44,7 @@ services:
   celery:
     restart: always
     build: ./arc
-    command: celery -A arc worker -l info --concurrency=4
+    command: celery -A arc worker -Q queue_humidity -c 2 -l info
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"

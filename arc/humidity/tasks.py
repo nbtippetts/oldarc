@@ -8,12 +8,14 @@ import gpiozero
 import redis
 from .hum_temp import get_humidity_temperature
 from signal import pause
-
+app.control.purge()
 rdb = redis.Redis(host='redis',port=6379,db=0)
 
 @periodic_task(
     run_every=303,
     name="humidity.log_humidity_temp",
+    queue="queue_humidity",
+    options={"queue": "queue_humidity"},
 	soft_time_limit=5
 )
 def log_humidity_temp():
@@ -34,7 +36,9 @@ def log_humidity_temp():
 @periodic_task(
     run_every=60,
     name="humidity.check_humidity_temp",
-	soft_time_limit=5
+    queue="queue_humidity",
+    options={"queue": "queue_humidity"},
+	soft_time_limit=30
 )
 def check_humidity_temp():
 	if not rdb.exists('relay_key'):
@@ -50,7 +54,7 @@ def check_humidity_temp():
 			temp_value=50.0
 		)
 		h.save()
-		data = HumidityTempValues.objects.get(pk=1) 
+		data = HumidityTempValues.objects.get(pk=1)
 		pass
 	try:
 		humidity, temperature = get_humidity_temperature()
@@ -72,7 +76,7 @@ def check_humidity_temp():
 				queue = rdb.get("relay_key")
 				if queue == b"OFF":
 					relay_stats.delay(False)
-					return 'Celery Relay OFF'
+					return 'Celery Relay OFF 1'
 		else:
 			rdb.set("relay_key","OFF")
 			return 'Unable to read humidity and temperature.'
@@ -81,13 +85,10 @@ def check_humidity_temp():
 		return f"ERROR: {e}"
 
 
-@app.task(bind=True, soft_time_limit=90000)
+@app.task(bind=True,queue="queue_humidity",max_retry=0,ignore_results=True)
 def relay_stats(self,status):
 	relay = gpiozero.OutputDevice(18, active_high=False, initial_value=False)
-	if status:
+	while status:
 		relay.on()
-	else:
-		relay.off()
-		return 'Celery Relay OFF'
-	pause()
-	return 'END TASK'
+		print("relay is now ON")
+	print('Celery Relay OFF 2')

@@ -7,7 +7,7 @@ from .models import Schedule, WaterPump
 from .forms import ScheduleForm, WaterPumpForm
 import time
 import json
-import gpiozero
+# import gpiozero
 from .tasks import relay_task, start_task
 
 def schedule(request):

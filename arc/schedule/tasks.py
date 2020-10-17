@@ -9,7 +9,7 @@ import gpiozero
 from signal import pause
 import redis
 from signal import pause
-
+app.control.purge()
 rdb = redis.Redis(host='redis',port=6379,db=0)
 
 @shared_task
@@ -49,4 +49,3 @@ def relay_task(self, status,pin):
 		return "User Relay OFF"
 	pause()
 	return 'END TASK'
-
