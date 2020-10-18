@@ -23,7 +23,7 @@ imutils==0.5.3
 kombu==4.6.11
 numpy==1.19.2
 opencv-contrib-python==4.1.0.25
-psycopg2==2.8.5
+psycopg2
 pyftdi==0.51.2
 pyserial==3.4
 python-crontab==2.5.1

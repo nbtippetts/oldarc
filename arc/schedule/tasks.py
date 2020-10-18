@@ -10,8 +10,8 @@ from signal import pause
 import redis
 from signal import pause
 app.control.purge()
-rdb = redis.Redis(host='redis',port=6379,db=0)
-
+#rdb = redis.Redis(host='redis',port=6379,db=0)
+rdb = redis.Redis(host='localhost',port=6379,db=0)
 @shared_task
 def start_task(**kwargs):
 	print(kwargs['pin'])
@@ -35,7 +35,7 @@ def start_task(**kwargs):
 		return "No GPIO in args."
 
 
-@app.task(bind=True, soft_time_limit=90000)
+@app.task(bind=True,max_retry=1, ignore_results=True, soft_time_limit=90000)
 def relay_task(self, status,pin):
 	if status and pin == '18':
 		rdb.set("relay_key","ON")
@@ -44,8 +44,6 @@ def relay_task(self, status,pin):
 	relay = gpiozero.OutputDevice(pin, active_high=False, initial_value=False)
 	if status:
 		relay.on()
+		pause()
 	else:
 		relay.off()
-		return "User Relay OFF"
-	pause()
-	return 'END TASK'
