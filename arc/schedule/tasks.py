@@ -10,8 +10,8 @@ from signal import pause
 import redis
 from signal import pause
 app.control.purge()
-#rdb = redis.Redis(host='redis',port=6379,db=0)
-rdb = redis.Redis(host='localhost',port=6379,db=0)
+rdb = redis.Redis(host='redis',port=6379,db=0)
+#rdb = redis.Redis(host='localhost',port=6379,db=0)
 @shared_task
 def start_task(**kwargs):
 	print(kwargs['pin'])

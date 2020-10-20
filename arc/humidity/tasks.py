@@ -9,11 +9,11 @@ import redis
 from .hum_temp import get_humidity_temperature
 from signal import pause
 app.control.purge()
-# rdb = redis.Redis(host='redis',port=6379,db=0)
-rdb = redis.Redis(host='localhost',port=6379,db=0)
+rdb = redis.Redis(host='redis',port=6379,db=0)
+#rdb = redis.Redis(host='localhost',port=6379,db=0)
 
 @periodic_task(
-    run_every=9303,
+    run_every=301,
     name="humidity.log_humidity_temp",
     queue="queue_humidity",
     options={"queue": "queue_humidity"},
@@ -35,11 +35,11 @@ def log_humidity_temp():
 	return "EXIT"
 
 @periodic_task(
-    run_every=1500,
+    run_every=20,
     name="humidity.check_humidity_temp",
     queue="queue_humidity",
     options={"queue": "queue_humidity"},
-	soft_time_limit=10
+	soft_time_limit=15
 )
 def check_humidity_temp():
 	if not rdb.exists('relay_key'):

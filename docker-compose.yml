@@ -21,9 +21,9 @@ services:
     restart: always
     image: postgres
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgress
-      - POSTGRES_DB=postgres
+      - POSTGRES_USER=pi
+      - POSTGRES_PASSWORD=rnautomations
+      - POSTGRES_DB=arc_db
     ports:
       - "5433:5432"
     expose:
