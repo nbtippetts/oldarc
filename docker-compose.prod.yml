@@ -4,18 +4,25 @@ services:
   web:
     restart: always
     build: ./arc
-    command: bash -c "while !</dev/tcp/db/5432; do sleep 1; done; python /code/manage.py makemigrations && python /code/manage.py migrate --noinput && python /code/manage.py runserver 0.0.0.0:8000"
+    command: bash -c "while !</dev/tcp/db/5432; do sleep 1; done; python /code/manage.py makemigrations && python /code/manage.py migrate --noinput && gunicorn arc.wsgi:application --bind 0.0.0.0:8000"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
     privileged: true
     volumes:
       - ./arc/:/code/
-    ports:
+    expose:
       - "8000:8000"
     depends_on:
       - db
       - redis
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - web
 
   db:
     restart: always
