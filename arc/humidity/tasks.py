@@ -13,7 +13,7 @@ rdb = redis.Redis(host='redis',port=6379,db=0)
 #rdb = redis.Redis(host='localhost',port=6379,db=0)
 
 @periodic_task(
-    run_every=301,
+    run_every=3001,
     name="humidity.log_humidity_temp",
     queue="queue_humidity",
     options={"queue": "queue_humidity"},
@@ -35,7 +35,7 @@ def log_humidity_temp():
 	return "EXIT"
 
 @periodic_task(
-    run_every=20,
+    run_every=2000,
     name="humidity.check_humidity_temp",
     queue="queue_humidity",
     options={"queue": "queue_humidity"},

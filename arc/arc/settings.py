@@ -26,12 +26,11 @@ SECRET_KEY = 'if&(y*+3iya!ix#)xh=ycq5y&8i36@exr&kkl_og2_7$(##u(q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'redis']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'redis', '[::1]']
 
 
 # Application definition
 INSTALLED_APPS = [
-    'users.apps.UsersConfig',
     'humidity.apps.HumidityConfig',
     'schedule.apps.ScheduleConfig',
     'streamapp.apps.StreamappConfig',
