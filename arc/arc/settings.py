@@ -14,7 +14,8 @@ from pathlib import Path
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
+# BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,7 +27,7 @@ SECRET_KEY = 'if&(y*+3iya!ix#)xh=ycq5y&8i36@exr&kkl_og2_7$(##u(q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'redis', '[::1]']
+ALLOWED_HOSTS = ['174.52.250.10', 'arc.dev', 'arc', '192.168.1.18', '172.18.0.1', 'web', '0.0.0.0', 'localhost', '127.0.0.1', 'redis', '[::1]']
 
 
 # Application definition
@@ -82,15 +83,7 @@ WSGI_APPLICATION = 'arc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'OG_DB',
-#         'USER': 'og',
-#         'HOST': 'localhost',
-#         'PORT': '',
-#     }
-# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -158,7 +151,10 @@ DJANGO_CELERY_BEAT_TZ_AWARE = False
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 
-STATIC_ROOT = '/'
-STATIC_URL = '/static/'
-# MEDIA_URL = '/usr/src/app/media/'
-# STATIC_URL = '/usr/src/app/static/'
+
+STATIC_URL='/static/'
+# as declared in NginX conf, it must match /opt/services/djangoapp/static/
+STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'static')
+
+# do the same for media files, it must match /opt/services/djangoapp/media/
+MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'media')

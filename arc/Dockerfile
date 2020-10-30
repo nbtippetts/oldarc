@@ -13,18 +13,17 @@ RUN apt-get install -y python3-venv
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN mkdir /arc
+RUN mkdir /arc/static
 # set work directory
-WORKDIR /code
+WORKDIR /arc
 RUN pip -V
 # install dependencies
-COPY ./requirements.txt /code/requirements.txt
+COPY ./requirements.txt /arc/requirements.txt
 RUN pip install -r requirements.txt
 # copy project
-COPY ./arc /code/
-RUN python -V
+COPY . /arc
 COPY ./platform_detect.py /opt/venv/lib/python3.7/site-packages/Adafruit_DHT/platform_detect.py
-
-EXPOSE 8000
 
 
 
