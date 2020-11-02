@@ -14,7 +14,7 @@ def schedule(request):
 	context = {
 		'waters': schedule_obj,
 	}
-	return render(request, 'schedule/schedule.html', context)
+	return render(request, 'schedule.html', context)
 
 def relay_on_off(request):
 	wat = Schedule.objects.all().order_by('-finish')[:3]
@@ -46,7 +46,7 @@ def relay_on_off(request):
 				'waters': wat,
 				'form': pump_form
 			}
-			return render(request, 'schedule/relay.html', context)
+			return render(request, 'relay.html', context)
 	form = WaterPumpForm(initial={
 		'relay_status': 'False',
 	})
@@ -54,7 +54,7 @@ def relay_on_off(request):
 		'waters': wat,
 		'form': form
 	}
-	return render(request, 'schedule/relay.html', context)
+	return render(request, 'relay.html', context)
 
 
 def check_schedule(request):
@@ -72,7 +72,7 @@ def check_schedule(request):
 			try:
 				p = PeriodicTask.objects.get_or_create(
 					interval=schedule,
-					name=form.cleaned_data['name'],
+					name=form.cleaned_data['gpio_pin'],
 					task='schedule.tasks.start_task',
 					kwargs=json.dumps({
 						'pin': form.cleaned_data['gpio_pin'],
@@ -81,7 +81,7 @@ def check_schedule(request):
 				)
 				PeriodicTasks.changed(p)
 			except Exception as e:
-				p = PeriodicTask.objects.get(name=form.cleaned_data['name'])
+				p = PeriodicTask.objects.get(name=form.cleaned_data['gpio_pin'])
 				p.interval=schedule
 				p.save()
 				PeriodicTasks.changed(p)
@@ -118,15 +118,12 @@ def check_schedule(request):
 				'form': form,
 				'waters': latest
 			}
-			return render(request, 'schedule/check_schedule.html', context)
+			return render(request, 'check_schedule.html', context)
 	# If this is a GET (or any other method) create the default form.
 	else:
-		wat = Schedule.objects.last()
-		wat.start_date = datetime.today()
-		wat.start = datetime.now()
 		form = ScheduleForm(initial={
-			'start_date': wat.start_date,
-			'start': wat.start,
+			'start_date': datetime.today(),
+			'start': datetime.now(),
 		})
 		print(form['start'])
 		wat_form = Schedule.objects.all().order_by('-finish')[:3]
@@ -134,4 +131,4 @@ def check_schedule(request):
 			'form': form,
 			'waters': wat_form,
 		}
-	return render(request, 'schedule/check_schedule.html', context)
+	return render(request, 'check_schedule.html', context)

@@ -1,4 +1,4 @@
-{% extends "schedule/base.html" %}
+{% extends "base.html" %}
 {% load bootstrap4 %}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
@@ -16,7 +16,7 @@
 <article class="media content-section">
 	<div class="media-body">
 		<h2 class="article-title">Water Log: {{ water.start_date }}</h2>
-		<p class="article-content">start {{ water.start }}</p>
+		<p id="id_start" class="article-content">Start Time {{ water.start }}</p>
 		<p class="article-content">deration {{ water.deration|time:'H:i' }} HRS</p>
 		<p class="article-content">finish {{ water.finish }}</p>
 		<p class="article-content">how_often {{ water.how_often|time:'H:i' }} HRS</p>

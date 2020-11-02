@@ -6,7 +6,8 @@ from .hum_temp import get_humidity_temperature
 import datetime
 
 def humidity(request):
-	current_humidity, current_temp = get_humidity_temperature()
+	# current_humidity, current_temp = get_humidity_temperature()
+	current_humidity, current_temp = 0.0, 0.0
 	form = HumidityTempForm()
 	data = HumidityTemp.objects.all().order_by('-created_at')[:10]
 	try:
@@ -25,7 +26,7 @@ def humidity(request):
 	'current_temp':current_temp,
 	'humidity_value':current_values.humidity_value,
 	'temp_value':current_values.temp_value,}
-	return render(request, 'humidity/line_chart.html', context)
+	return render(request, 'line_chart.html', context)
 
 def set_humidity_temp(request):
 	if request.method == 'POST':

@@ -16,10 +16,13 @@ Including another URLconf
 from django.urls import include, path
 from django.contrib import admin
 from django.urls import path
+from . import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('schedule/', include('schedule.urls')),
+    path('', views.homepage, name='homepage'),
     path('humidity/', include('humidity.urls')),
+    path('schedule/', include('schedule.urls')),
     path('streamapp/', include('streamapp.urls')),
 ]

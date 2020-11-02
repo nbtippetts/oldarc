@@ -64,7 +64,7 @@ ROOT_URLCONF = 'arc.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -89,24 +89,24 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'arc_db',
         'USER': 'pi',
-	'PASSWORD': 'rnautomations',
-        'HOST': 'db',
-	#'HOST': 'localhost',
+        'PASSWORD': 'rnautomations',
+        # 'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': 5432,
     }
 }
 
 CELERYD_TASK_SOFT_TIME_LIMIT = 9000
 
-# CELERY_ENABLE_UTC = True
-#CELERY_BROKER_URL = 'redis://localhost:6379/0'
-#CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
-#CELERY_BROKER_TRANSPORT = 'redis'
-
 CELERY_ENABLE_UTC = True
-CELERY_BROKER_URL = 'redis://redis:6379/0'
-CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
 CELERY_BROKER_TRANSPORT = 'redis'
+
+# CELERY_ENABLE_UTC = True
+# CELERY_BROKER_URL = 'redis://redis:6379/0'
+# CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+# CELERY_BROKER_TRANSPORT = 'redis'
 
 BOOTSTRAP4 = {
     'include_jquery': True,
