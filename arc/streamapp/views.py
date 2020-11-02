@@ -4,7 +4,7 @@ from django.http.response import StreamingHttpResponse
 # Create your views here.
 
 def index(request):
-	return render(request, 'streamapp/home.html')
+	return render(request, 'home.html')
 
 
 def gen(camera):

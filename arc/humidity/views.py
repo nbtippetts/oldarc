@@ -26,7 +26,7 @@ def humidity(request):
 	'current_temp':current_temp,
 	'humidity_value':current_values.humidity_value,
 	'temp_value':current_values.temp_value,}
-	return render(request, 'line_chart.html', context)
+	return render(request, 'base.html', context)
 
 def set_humidity_temp(request):
 	if request.method == 'POST':

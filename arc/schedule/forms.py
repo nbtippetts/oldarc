@@ -81,9 +81,9 @@ class WaterPumpForm(forms.Form):
 	relay_status = forms.ChoiceField(
 		choices=on_off_gpio
 	)
-	gpio_pin = forms.ChoiceField(
-		choices=select_gpio_pin
-	)
+	# gpio_pin = forms.ChoiceField(
+	# 	choices=select_gpio_pin
+	# )
 	class Meta:
 		model = WaterPump
 

@@ -73,6 +73,11 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+
+            'libraries':{
+                'schedule_display': 'schedule.templatetags.schedule_display',
+                'humidity_display': 'humidity.templatetags.humidity_display',
+            },
         },
     },
 ]

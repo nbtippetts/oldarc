@@ -27,18 +27,18 @@ def relay_on_off(request):
 					pump_status=pump_form.cleaned_data['relay_status'],
 					pump_start = datetime.now(),
 					pump_finish=datetime.now(),
-					gpio_pin=pump_form.cleaned_data['gpio_pin']
+					gpio_pin=14
 				)
 				water_pump.save()
-				relay_task.delay(True, pump_form.cleaned_data['gpio_pin'])
+				relay_task.delay(True, 14)
 			if pump_form.cleaned_data['relay_status'] == 'False':
 				try:
 					water_pump = WaterPump.objects.filter(
-						gpio_pin=pump_form.cleaned_data['gpio_pin']).latest('pump_start')
+						gpio_pin=14).latest('pump_start')
 					water_pump.pump_status = pump_form.cleaned_data['relay_status']
 					water_pump.pump_finish = datetime.now()
 					water_pump.save()
-					relay_task.delay(False, pump_form.cleaned_data['gpio_pin'])
+					relay_task.delay(False, 14)
 				except Exception as e:
 					pass
 
@@ -46,7 +46,7 @@ def relay_on_off(request):
 				'waters': wat,
 				'form': pump_form
 			}
-			return render(request, 'relay.html', context)
+			return render(request, 'base.html', context)
 	form = WaterPumpForm(initial={
 		'relay_status': 'False',
 	})
@@ -54,7 +54,7 @@ def relay_on_off(request):
 		'waters': wat,
 		'form': form
 	}
-	return render(request, 'relay.html', context)
+	return render(request, 'base.html', context)
 
 
 def check_schedule(request):
@@ -101,15 +101,15 @@ def check_schedule(request):
 				date.min, often.time()) - datetime.min
 			next_time = finish_time + nw
 			print(next_time)
-			schedule = Schedule(
-				start_date=form.cleaned_data['start_date'],
-				start = form.cleaned_data['start'],
-				how_often = form.cleaned_data['how_often'],
-				deration = form.cleaned_data['deration'],
-				finish = finish_time,
-				next_schedule=next_time,
-				gpio_pin = form.cleaned_data['gpio_pin']
-			)
+			schedule = Schedule.objects.get(gpio_pin=form.cleaned_data['gpio_pin'])
+			schedule.start_date=form.cleaned_data['start_date'],
+			schedule.start = form.cleaned_data['start'],
+			schedule.how_often = form.cleaned_data['how_often'],
+			schedule.deration = form.cleaned_data['deration'],
+			schedule.finish = finish_time,
+			schedule.next_schedule=next_time,
+			schedule.gpio_pin = form.cleaned_data['gpio_pin']
+			
 			schedule.save()
 			time.sleep(2)
 			start_task.delay()
