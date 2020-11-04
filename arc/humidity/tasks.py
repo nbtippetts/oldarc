@@ -13,7 +13,7 @@ app.control.purge()
 rdb = redis.Redis(host='localhost',port=6379,db=0)
 
 @periodic_task(
-    run_every=3001,
+    run_every=200,
     name="humidity.log_humidity_temp",
     queue="queue_humidity",
     options={"queue": "queue_humidity"},
@@ -35,15 +35,15 @@ def log_humidity_temp():
 	return "EXIT"
 
 @periodic_task(
-    run_every=2000,
+    run_every=20,
     name="humidity.check_humidity_temp",
     queue="queue_humidity",
     options={"queue": "queue_humidity"},
 	soft_time_limit=15
 )
 def check_humidity_temp():
-	if not rdb.exists('relay_key'):
-		rdb.set("relay_key","OFF")
+	if not rdb.exists('gpio_18'):
+		rdb.set("gpio_18","OFF")
 
 	try:
 		data = HumidityTempValues.objects.get(pk=1)
@@ -62,27 +62,27 @@ def check_humidity_temp():
 		if humidity is not None and temperature is not None:
 			print("Temp={0:0.1f}*C  Humidity={1:0.1f}%".format(temperature, humidity))
 			if humidity >= data.humidity_value or temperature >= data.temp_value:
-				queue = rdb.get("relay_key")
+				queue = rdb.get("gpio_18")
 				if queue == b"ON":
 					return 'Relay is ON so exit.'
 
 				if queue == b"OFF":
 					relay_stats.delay(True)
-					rdb.set("relay_key","ON")
+					rdb.set("gpio_18","ON")
 					return 'sent task to relay!'
 
 				return 'Humidity/Temperature out of params values turning Relay ON'
 			else:
-				rdb.set("relay_key","OFF")
-				queue = rdb.get("relay_key")
+				rdb.set("gpio_18","OFF")
+				queue = rdb.get("gpio_18")
 				if queue == b"OFF":
 					relay_stats.delay(False)
 					return 'Celery Relay OFF 1'
 		else:
-			rdb.set("relay_key","OFF")
+			rdb.set("gpio_18","OFF")
 			return 'Unable to read humidity and temperature.'
 	except Exception as e:
-		rdb.set("relay_key","OFF")
+		rdb.set("gpio_18","OFF")
 		return f"ERROR: {e}"
 
 

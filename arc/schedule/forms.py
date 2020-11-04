@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, time
 from django import forms
-from .models import Schedule, WaterPump
+from .models import Schedule, Relay, Relay14, Relay15
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 on_off_gpio = (
@@ -77,13 +77,25 @@ class ScheduleForm(forms.Form):
 		return how_often, deration
 
 
-class WaterPumpForm(forms.Form):
+class RelayForm(forms.Form):
 	relay_status = forms.ChoiceField(
 		choices=on_off_gpio
 	)
-	# gpio_pin = forms.ChoiceField(
-	# 	choices=select_gpio_pin
-	# )
 	class Meta:
-		model = WaterPump
+		model = Relay
+
+class RelayForm14(forms.Form):
+	relay_status = forms.ChoiceField(
+		choices=on_off_gpio
+	)
+	class Meta:
+		model = Relay14
+
+class RelayForm15(forms.Form):
+	relay_status = forms.ChoiceField(
+		choices=on_off_gpio
+	)
+	class Meta:
+		model = Relay15
+
 

@@ -5,7 +5,7 @@
 {{ form.media }}
 {% load crispy_forms_tags %}
 
-<form action="{% url 'relay' %}" method="POST">
+<form action="{% url 'relay_on_off_14' %}" method="POST">
 	{% csrf_token %}
 	{% bootstrap_form form %}
 	<!-- <input id="key" type="text" name="pump_status"> -->

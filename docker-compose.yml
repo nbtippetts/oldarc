@@ -16,6 +16,7 @@ services:
       - static_volume:/arc/static  # <-- bind the static volume
       - media_volume:/arc/media  # <-- bind the media volume
     networks:  # <-- here
+      - web_network
       - nginx_network
       - db_network  # <-- connect to the bridge
       - redis_network  # <-- connect to the bridge
@@ -29,13 +30,15 @@ services:
       - ./arc:/arc
       - static_volume:/arc/static  # <-- bind the static volume
       - media_volume:/arc/media  # <-- bind the media volume
-
     ports:
       - 8000:80
     depends_on:
       - web
     networks:  # <-- here
       - nginx_network
+      - web_network
+      - db_network  # <-- connect to the bridge
+      - redis_network  # <-- connect to the bridge
 
   db:
     restart: always
@@ -48,7 +51,6 @@ services:
       - "5433:5432"
     networks:  # <-- connect to the bridge
       - db_network
-      - redis_network
 
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -69,11 +71,15 @@ services:
   celery:
     restart: always
     build: ./arc
-    command: bash -c "celery -A arc worker -Q queue_humidity -c 2 -l info && celery -A arc worker --concurrency=2"
+    command: bash -c "celery -A arc worker -Q queue_humidity -c 2 -l info && celery -A arc worker -Q queue_schedule -c 2 -l info && celery -A arc worker -Q queue_schedule_14 -l info && celery -A arc worker -Q queue_schedule_15 -l info"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
     privileged: true
+    networks:  # <-- connect to the bridge
+      - web_network
+      - db_network  # <-- connect to the bridge
+      - redis_network  # <-- connect to the bridge
     volumes:
       - ./arc:/arc
     links:
@@ -91,6 +97,10 @@ services:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
     privileged: true
+    networks:  # <-- connect to the bridge
+      - web_network
+      - db_network  # <-- connect to the bridge
+      - redis_network  # <-- connect to the bridge
     volumes:
       - ./arc:/arc
     links:
@@ -101,6 +111,8 @@ services:
       - web
 
 networks:  # <-- and here
+  web_network:
+    driver: bridge
   nginx_network:
     driver: bridge
   db_network:  # <-- add the bridge

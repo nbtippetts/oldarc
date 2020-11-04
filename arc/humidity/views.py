@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import HumidityTemp, HumidityTempValues
 from .forms import HumidityTempForm
@@ -6,8 +6,7 @@ from .hum_temp import get_humidity_temperature
 import datetime
 
 def humidity(request):
-	# current_humidity, current_temp = get_humidity_temperature()
-	current_humidity, current_temp = 0.0, 0.0
+	current_humidity, current_temp = get_humidity_temperature()
 	form = HumidityTempForm()
 	data = HumidityTemp.objects.all().order_by('-created_at')[:10]
 	try:
@@ -45,3 +44,7 @@ def set_humidity_temp(request):
 		ht_obj = HumidityTemp.objects.all().order_by('-created_at')[:10]
 		context = {'data': ht_obj,'form':form}
 		return redirect('humidity_view')
+
+def ajax_humidity(request):
+	current_humidity, current_temp = get_humidity_temperature()
+	return JsonResponse({'current_humidity':current_humidity, 'current_temp':current_temp})

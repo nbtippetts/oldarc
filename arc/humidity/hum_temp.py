@@ -2,7 +2,7 @@ import Adafruit_DHT
 import gpiozero
 
 def get_humidity_temperature():
-	return 0.0, 0.0
+	return 500.0,500.0
 	sensor = Adafruit_DHT.DHT11
 	pin =17
 	while True:

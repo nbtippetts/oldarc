@@ -3,58 +3,106 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db import connection
 from datetime import datetime, timedelta, time, date
 from django_celery_beat.models import PeriodicTasks, PeriodicTask, IntervalSchedule
-from .models import Schedule, WaterPump
-from .forms import ScheduleForm, WaterPumpForm
+from .models import Schedule, Relay, Relay14, Relay15
+from .forms import ScheduleForm, RelayForm, RelayForm14, RelayForm15
 import time
 import json
-from .tasks import relay_task, start_task
+from .tasks import relay_task_14, relay_task_15
+import redis
+
+# rdb = redis.Redis(host='redis',port=6379,db=0)
+rdb = redis.Redis(host='localhost',port=6379,db=0)
+
 
 def schedule(request):
 	schedule_obj = Schedule.objects.all().order_by('-finish')[:3]
 	context = {
 		'waters': schedule_obj,
 	}
-	return render(request, 'schedule.html', context)
+	return render(request, 'base.html', context)
 
-def relay_on_off(request):
+def relay_on_off_14(request):
+	if not rdb.exists('gpio_14'):
+		rdb.set("gpio_14","OFF")
 	wat = Schedule.objects.all().order_by('-finish')[:3]
 	if request.method == 'POST':
-		pump_form = WaterPumpForm(request.POST)
-		if pump_form.is_valid():
+		relay_form = RelayForm(request.POST)
+		if relay_form.is_valid():
 			stat = False
-			if pump_form.cleaned_data['relay_status'] == 'True':
-				water_pump = WaterPump(
-					pump_status=pump_form.cleaned_data['relay_status'],
-					pump_start = datetime.now(),
-					pump_finish=datetime.now(),
-					gpio_pin=14
-				)
-				water_pump.save()
-				relay_task.delay(True, 14)
-			if pump_form.cleaned_data['relay_status'] == 'False':
+			if relay_form.cleaned_data['relay_status'] == 'True':
+				rdb.set("gpio_14","ON")
+				relay14 = Relay.objects.get(gpio_pin=14)
+				relay14.relay_status=relay_form.cleaned_data['relay_status']
+				relay14.relay_start = datetime.now()
+				relay14.relay_finish=datetime.now()
+				relay14.gpio_pin=14
+				
+				relay14.save()
+				relay_task_14.delay(True, 14)
+			if relay_form.cleaned_data['relay_status'] == 'False':
+				rdb.set("gpio_14","OFF")
 				try:
-					water_pump = WaterPump.objects.filter(
-						gpio_pin=14).latest('pump_start')
-					water_pump.pump_status = pump_form.cleaned_data['relay_status']
-					water_pump.pump_finish = datetime.now()
-					water_pump.save()
-					relay_task.delay(False, 14)
+					relay14 = Relay.objects.get(gpio_pin=14)
+					relay14.relay_status = relay_form.cleaned_data['relay_status']
+					relay14.relay_finish = datetime.now()
+					relay14.save()
+					relay_task_14.delay(False, 14)
 				except Exception as e:
 					pass
 
 			context = {
 				'waters': wat,
-				'form': pump_form
+				'form': relay_form
 			}
 			return render(request, 'base.html', context)
-	form = WaterPumpForm(initial={
-		'relay_status': 'False',
-	})
-	context = {
-		'waters': wat,
-		'form': form
-	}
-	return render(request, 'base.html', context)
+	else:
+		form = RelayForm()
+		context = {
+			'waters': wat,
+			'form': form
+		}
+		return render(request, 'base.html', context)
+
+def relay_on_off_15(request):
+	if not rdb.exists('gpio_15'):
+		rdb.set("gpio_15","OFF")
+	wat = Schedule.objects.all().order_by('-finish')[:3]
+	if request.method == 'POST':
+		relay_form = RelayForm(request.POST)
+		if relay_form.is_valid():
+			stat = False
+			if relay_form.cleaned_data['relay_status'] == 'True':
+				rdb.set("gpio_15","ON")
+				relay15 = Relay.objects.get(gpio_pin=15)
+				relay15.relay_status=relay_form.cleaned_data['relay_status']
+				relay15.relay_start = datetime.now()
+				relay15.relay_finish=datetime.now()
+				relay15.gpio_pin=15
+				relay15.save()
+				relay_task_15.delay(True, 15)
+			if relay_form.cleaned_data['relay_status'] == 'False':
+				rdb.set("gpio_15","OFF")
+				try:
+					relay15 = Relay.objects.get(gpio_pin=15)
+					relay15.relay_status = relay_form.cleaned_data['relay_status']
+					relay15.relay_finish = datetime.now()
+					relay15.save()
+					relay_task_15.delay(False, 15)
+				except Exception as e:
+					pass
+
+			context = {
+				'waters': wat,
+				'form': relay_form
+			}
+			return render(request, 'base.html', context)
+	else:
+		form = RelayForm()
+		context = {
+			'waters': wat,
+			'form': form
+		}
+		return render(request, 'base.html', context)
 
 
 def check_schedule(request):
@@ -65,27 +113,6 @@ def check_schedule(request):
 		# Check if the form is valid:
 		if form.is_valid():
 			get_hour = form.cleaned_data['how_often'].split(':')
-			schedule, created = IntervalSchedule.objects.get_or_create(
-				every=int(get_hour[0]),
-				period=IntervalSchedule.HOURS,
-			)
-			try:
-				p = PeriodicTask.objects.get_or_create(
-					interval=schedule,
-					name=form.cleaned_data['gpio_pin'],
-					task='schedule.tasks.start_task',
-					kwargs=json.dumps({
-						'pin': form.cleaned_data['gpio_pin'],
-						'deration': form.cleaned_data['deration']
-					})
-				)
-				PeriodicTasks.changed(p)
-			except Exception as e:
-				p = PeriodicTask.objects.get(name=form.cleaned_data['gpio_pin'])
-				p.interval=schedule
-				p.save()
-				PeriodicTasks.changed(p)
-				pass
 			ws = datetime.combine(
 				date.min, form.cleaned_data['start']) - datetime.min
 			t = datetime.today()
@@ -111,24 +138,21 @@ def check_schedule(request):
 			schedule.gpio_pin = form.cleaned_data['gpio_pin']
 			
 			schedule.save()
-			time.sleep(2)
-			start_task.delay()
 			latest = Schedule.objects.all().order_by('-id')
 			context = {
 				'form': form,
 				'waters': latest
 			}
-			return render(request, 'check_schedule.html', context)
+			return render(request, 'base.html', context)
 	# If this is a GET (or any other method) create the default form.
 	else:
 		form = ScheduleForm(initial={
 			'start_date': datetime.today(),
 			'start': datetime.now(),
 		})
-		print(form['start'])
 		wat_form = Schedule.objects.all().order_by('-finish')[:3]
 		context = {
 			'form': form,
 			'waters': wat_form,
 		}
-	return render(request, 'check_schedule.html', context)
+	return render(request, 'base.html', context)

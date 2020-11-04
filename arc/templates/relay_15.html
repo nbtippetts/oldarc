@@ -1,0 +1,13 @@
+{% load static %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{{ form.media }}
+{% load crispy_forms_tags %}
+
+<form action="{% url 'relay_on_off_15' %}" method="POST">
+	{% csrf_token %}
+	{% bootstrap_form form %}
+	<!-- <input id="key" type="text" name="pump_status"> -->
+	<input type="submit" value="Submit">
+</form>
