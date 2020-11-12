@@ -9,8 +9,8 @@ import redis
 from .hum_temp import get_humidity_temperature
 from signal import pause
 app.control.purge()
-# rdb = redis.Redis(host='redis',port=6379,db=0)
 rdb = redis.Redis(host='localhost',port=6379,db=0)
+# rdb = redis.Redis(host='localhost',port=6379,db=0)
 
 @periodic_task(
     run_every=200,

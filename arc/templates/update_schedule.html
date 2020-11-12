@@ -1,0 +1,13 @@
+{% load static %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{{ form.media }}
+{% load crispy_forms_tags %}
+
+
+<form action="{% url 'update_schedule' %}" method="POST">
+	{% csrf_token %}
+	{% bootstrap_form form %}
+	<input type="submit" value="Submit">
+</form>

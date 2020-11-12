@@ -6,5 +6,5 @@ from .views import humidity, set_humidity_temp, ajax_humidity
 urlpatterns = [
     path('', humidity, name='humidity_view'),
     path('humidity_temperature', set_humidity_temp, name='humidity_temperature'),
-    path('ajax_humidity_url', ajax_humidity, name='ajax_humidity'),
+    path('ajax_humidity', ajax_humidity, name='ajax_humidity'),
 ]

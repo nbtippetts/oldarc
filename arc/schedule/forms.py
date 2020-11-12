@@ -9,9 +9,10 @@ on_off_gpio = (
 )
 select_gpio_pin = (
 	(14, 'Lights'),
-	(15, 'Pump')
+	(15, 'Water')
 )
 select_duration = (
+	(timedelta(minutes=2), '00:02'),
 	(timedelta(minutes=30), '00:30'),
 	(timedelta(hours=1), '01:00'),
 	(timedelta(hours=1, minutes=30), '01:30'),
@@ -19,6 +20,7 @@ select_duration = (
 	(timedelta(hours=2, minutes=30), '02:30'),
 )
 select_how_often = (
+	(timedelta(minutes=3), '00:03'),
 	(timedelta(hours=3), '03:00'),
 	(timedelta(hours=3, minutes=30), '03:30'),
 	(timedelta(hours=4), '04:00'),
@@ -65,16 +67,8 @@ class ScheduleForm(forms.Form):
 	gpio_pin = forms.ChoiceField(
 		choices=select_gpio_pin
 	)
-
-	def schedule_time(self):
-		start_date = self.cleaned_data['start_date']
-		start = self.cleaned_data['start']
-		deration = self.cleaned_data['deration']
-		how_often = self.cleaned_data['how_often']
-
-		deration = datetime.strptime(deration, '%H:%M:%S')
-		how_often = datetime.strptime(how_often, '%H:%M:%S')
-		return how_often, deration
+	class Meta:
+		model = Schedule
 
 
 class RelayForm(forms.Form):

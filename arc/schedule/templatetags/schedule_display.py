@@ -1,11 +1,12 @@
 from django import template
 register = template.Library()
 from ..models import Schedule
-from ..forms import RelayForm
+from ..forms import RelayForm, ScheduleForm
+from datetime import datetime
 import RPi.GPIO as GPIO
 import redis
-# rdb = redis.Redis(host='redis',port=6379,db=0)
 rdb = redis.Redis(host='localhost',port=6379,db=0)
+# rdb = redis.Redis(host='localhost',port=6379,db=0)
 @register.inclusion_tag('gpio_14_schedule.html')
 def show_gpio_14_schedule():
 	latest_schedule = Schedule.objects.filter(gpio_pin=14)
@@ -15,6 +16,14 @@ def show_gpio_14_schedule():
 def show_gpio_15_schedule():
 	latest_schedule = Schedule.objects.filter(gpio_pin=15)
 	return {'latest_schedule': latest_schedule}
+
+@register.inclusion_tag('update_schedule.html')
+def schedule_form():
+	form = ScheduleForm(initial={
+		'start_date': datetime.today(),
+		'start': datetime.now(),
+	})
+	return {'form': form}
 
 @register.inclusion_tag('relay_14.html')
 def relay_14():

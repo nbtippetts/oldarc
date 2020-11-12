@@ -36,9 +36,6 @@ services:
       - web
     networks:  # <-- here
       - nginx_network
-      - web_network
-      - db_network  # <-- connect to the bridge
-      - redis_network  # <-- connect to the bridge
 
   db:
     restart: always
@@ -51,6 +48,7 @@ services:
       - "5433:5432"
     networks:  # <-- connect to the bridge
       - db_network
+      - redis_network
 
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -68,22 +66,78 @@ services:
     volumes:
      - redisdata:/data
 
-  celery:
+  queue_humidity:
     restart: always
     build: ./arc
-    command: bash -c "celery -A arc worker -Q queue_humidity -c 2 -l info && celery -A arc worker -Q queue_schedule -c 2 -l info && celery -A arc worker -Q queue_schedule_14 -l info && celery -A arc worker -Q queue_schedule_15 -l info"
+    command: bash -c "celery -A arc worker -Q queue_humidity -c 2 -l info"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
     privileged: true
     networks:  # <-- connect to the bridge
       - web_network
+      - nginx_network
       - db_network  # <-- connect to the bridge
       - redis_network  # <-- connect to the bridge
     volumes:
       - ./arc:/arc
-    links:
+    depends_on:
+      - db
       - redis
+      - web
+  queue_schedule:
+    restart: always
+    build: ./arc
+    command: bash -c "celery -A arc worker -l info --concurrency=2"
+    devices:
+      - "/dev/gpiomem:/dev/gpiomem"
+      - "/dev/mem:/dev/mem"
+    privileged: true
+    networks:  # <-- connect to the bridge
+      - web_network
+      - nginx_network
+      - db_network  # <-- connect to the bridge
+      - redis_network  # <-- connect to the bridge
+    volumes:
+      - ./arc:/arc
+    depends_on:
+      - db
+      - redis
+      - web
+  queue_schedule_14:
+    restart: always
+    build: ./arc
+    command: bash -c "celery -A arc worker -Q queue_schedule_14 -l info"
+    devices:
+      - "/dev/gpiomem:/dev/gpiomem"
+      - "/dev/mem:/dev/mem"
+    privileged: true
+    networks:  # <-- connect to the bridge
+      - web_network
+      - nginx_network
+      - db_network  # <-- connect to the bridge
+      - redis_network  # <-- connect to the bridge
+    volumes:
+      - ./arc:/arc
+    depends_on:
+      - db
+      - redis
+      - web
+  queue_schedule_15:
+    restart: always
+    build: ./arc
+    command: bash -c "celery -A arc worker -Q queue_schedule_15 -l info"
+    devices:
+      - "/dev/gpiomem:/dev/gpiomem"
+      - "/dev/mem:/dev/mem"
+    privileged: true
+    networks:  # <-- connect to the bridge
+      - web_network
+      - nginx_network
+      - db_network  # <-- connect to the bridge
+      - redis_network  # <-- connect to the bridge
+    volumes:
+      - ./arc:/arc
     depends_on:
       - db
       - redis
@@ -99,12 +153,11 @@ services:
     privileged: true
     networks:  # <-- connect to the bridge
       - web_network
+      - nginx_network
       - db_network  # <-- connect to the bridge
       - redis_network  # <-- connect to the bridge
     volumes:
       - ./arc:/arc
-    links:
-      - redis
     depends_on:
       - db
       - redis

@@ -101,7 +101,7 @@ DATABASES = {
     }
 }
 
-CELERYD_TASK_SOFT_TIME_LIMIT = 9000
+# CELERYD_TASK_SOFT_TIME_LIMIT = 9000
 
 CELERY_ENABLE_UTC = True
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
@@ -141,15 +141,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-# TIME_ZONE = 'America/Denver'
+TIME_ZONE = 'America/Denver'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
-
-DJANGO_CELERY_BEAT_TZ_AWARE = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
