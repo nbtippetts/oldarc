@@ -25,7 +25,7 @@ def humidity(request):
 	'current_temp':current_temp,
 	'humidity_value':current_values.humidity_value,
 	'temp_value':current_values.temp_value,}
-	return render(request, 'base.html', context)
+	return redirect('/', context)
 
 def set_humidity_temp(request):
 	if request.method == 'POST':
@@ -39,11 +39,11 @@ def set_humidity_temp(request):
 			form = HumidityTempForm()
 			ht_obj = HumidityTemp.objects.all().order_by('-created_at')[:10]
 			context = {'data': ht_obj,'form':form}
-			return redirect('humidity_view')
+			return redirect('/',context)
 
 		ht_obj = HumidityTemp.objects.all().order_by('-created_at')[:10]
 		context = {'data': ht_obj,'form':form}
-		return redirect('humidity_view')
+		return redirect('/',context)
 
 def ajax_humidity(request):
 	current_humidity, current_temp = get_humidity_temperature()

@@ -4,7 +4,7 @@ services:
   web:
     restart: always
     build: ./arc
-    command: bash -c "while !</dev/tcp/db/5432; do sleep 1; done; python /arc/manage.py collectstatic --noinput && python /arc/manage.py makemigrations && python /arc/manage.py migrate --noinput && gunicorn arc.wsgi:application --bind 0.0.0.0:8000"
+    command: bash -c "while !</dev/tcp/db/5432; do sleep 1; done; python /arc/manage.py makemigrations && python /arc/manage.py migrate --noinput && python manage.py loaddata arc_data.json && python /arc/manage.py collectstatic --noinput && gunicorn arc.wsgi:application --bind 0.0.0.0:8000"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
@@ -66,10 +66,10 @@ services:
     volumes:
      - redisdata:/data
 
-  queue_humidity:
+  celery:
     restart: always
     build: ./arc
-    command: bash -c "celery -A arc worker -Q queue_humidity -c 2 -l info"
+    command: bash -c "celery -A arc worker"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
@@ -85,10 +85,50 @@ services:
       - db
       - redis
       - web
-  queue_schedule:
+  queue_humidity:
     restart: always
     build: ./arc
-    command: bash -c "celery -A arc worker -l info --concurrency=2"
+    command: bash -c "celery -A arc worker -Q queue_humidity -c 2"
+    devices:
+      - "/dev/gpiomem:/dev/gpiomem"
+      - "/dev/mem:/dev/mem"
+    privileged: true
+    networks:  # <-- connect to the bridge
+      - web_network
+      - nginx_network
+      - db_network  # <-- connect to the bridge
+      - redis_network  # <-- connect to the bridge
+    volumes:
+      - ./arc:/arc
+    depends_on:
+      - db
+      - redis
+      - web
+
+  queue_relay_14:
+    restart: always
+    build: ./arc
+    command: bash -c "celery -A arc worker -Q queue_relay_14"
+    devices:
+      - "/dev/gpiomem:/dev/gpiomem"
+      - "/dev/mem:/dev/mem"
+    privileged: true
+    networks:  # <-- connect to the bridge
+      - web_network
+      - nginx_network
+      - db_network  # <-- connect to the bridge
+      - redis_network  # <-- connect to the bridge
+    volumes:
+      - ./arc:/arc
+    depends_on:
+      - db
+      - redis
+      - web
+
+  queue_relay_15:
+    restart: always
+    build: ./arc
+    command: bash -c "celery -A arc worker -Q queue_relay_15"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
@@ -107,7 +147,7 @@ services:
   queue_schedule_14:
     restart: always
     build: ./arc
-    command: bash -c "celery -A arc worker -Q queue_schedule_14 -l info"
+    command: bash -c "celery -A arc worker -Q queue_schedule_14"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
@@ -126,7 +166,7 @@ services:
   queue_schedule_15:
     restart: always
     build: ./arc
-    command: bash -c "celery -A arc worker -Q queue_schedule_15 -l info"
+    command: bash -c "celery -A arc worker -Q queue_schedule_15"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
@@ -146,7 +186,7 @@ services:
   celery-beat:
     restart: always
     build: ./arc
-    command: celery -A arc beat -l info
+    command: celery -A arc beat
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"

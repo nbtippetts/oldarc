@@ -12,9 +12,9 @@
 	<input type="submit" value="Submit">
 </form>
 <hr style="border: 0; height: 1px; background: #333; background-image: linear-gradient(to right, #ccc, #333, #ccc);">
-<div class="container" style=" margin-top: 15px;">
+<div class="container" style="margin-top: 15px;">
 	<div class="row">
-		<table class="table table-bordered">
+		<table class="table table-bordered" style="margin-top: 0px;">
 			<thead>
 			<tr>
 				<th>Humidity %</th>
@@ -25,9 +25,9 @@
 			<tbody>
 			{% for d in data %}
 			<tr>
-				<td>{{ d.humidity }}</td>
-				<td>{{ d.temp }}</td>
-				<td>{{ d.created_at }}</td>
+				<td style="font-size: 14px;">{{ d.humidity }}</td>
+				<td style="font-size: 14px;">{{ d.temp }}</td>
+				<td style="font-size: 14px;">{{ d.created_at }}</td>
 			</tr>
 			{% endfor %}
 			</tbody>

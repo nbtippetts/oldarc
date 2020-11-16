@@ -21,9 +21,9 @@ RUN pip -V
 # install dependencies
 COPY ./requirements.txt /arc/requirements.txt
 RUN pip install -r requirements.txt
+COPY . /arc
 # copy project
 RUN python -V
-COPY . /arc
 COPY ./platform_detect.py /opt/venv/lib/python3.7/site-packages/Adafruit_DHT/platform_detect.py
 
 

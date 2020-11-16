@@ -1,6 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 from arc.celery import app
 from celery.decorators import periodic_task
+from celery.schedules import crontab
 from django.db import connection
 from datetime import datetime, timedelta, date
 from .models import HumidityTemp, HumidityTempValues
@@ -9,11 +10,11 @@ import redis
 from .hum_temp import get_humidity_temperature
 from signal import pause
 app.control.purge()
-rdb = redis.Redis(host='localhost',port=6379,db=0)
-# rdb = redis.Redis(host='localhost',port=6379,db=0)
+rdb = redis.Redis(host='redis',port=6379,db=0)
+# rdb = redis.Redis(host='redis',port=6379,db=0)
 
 @periodic_task(
-    run_every=200,
+    run_every=crontab(minute='*/5'),
     name="humidity.log_humidity_temp",
     queue="queue_humidity",
     options={"queue": "queue_humidity"},

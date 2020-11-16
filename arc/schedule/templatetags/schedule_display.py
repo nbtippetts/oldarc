@@ -1,12 +1,22 @@
 from django import template
 register = template.Library()
-from ..models import Schedule
+from ..models import Schedule, ScheduleLog
 from ..forms import RelayForm, ScheduleForm
 from datetime import datetime
 import RPi.GPIO as GPIO
 import redis
-rdb = redis.Redis(host='localhost',port=6379,db=0)
-# rdb = redis.Redis(host='localhost',port=6379,db=0)
+rdb = redis.Redis(host='redis',port=6379,db=0)
+# rdb = redis.Redis(host='redis',port=6379,db=0)
+@register.inclusion_tag('gpio_14_schedule_log.html')
+def show_gpio_14_schedule_log():
+	latest_schedule = ScheduleLog.objects.filter(gpio_pin=14).order_by('-id')[:10]
+	return {'latest_schedule': latest_schedule}
+
+@register.inclusion_tag('gpio_15_schedule_log.html')
+def show_gpio_15_schedule_log():
+	latest_schedule = ScheduleLog.objects.filter(gpio_pin=15).order_by('-id')[:10]
+	return {'latest_schedule': latest_schedule}
+
 @register.inclusion_tag('gpio_14_schedule.html')
 def show_gpio_14_schedule():
 	latest_schedule = Schedule.objects.filter(gpio_pin=14)
@@ -52,7 +62,8 @@ def relay_15():
 @register.inclusion_tag('gpio_14.html')
 def gpio_14_state_function():
 	pin_state = rdb.get('gpio_14')
-	if pin_state == b'ON':
+	schedule_pin_state = rdb.get('schedule_gpio_14')
+	if pin_state == b'ON' or schedule_pin_state == b'ON':
 		pin_state = 1
 	else:
 		pin_state = 0
@@ -61,7 +72,8 @@ def gpio_14_state_function():
 @register.inclusion_tag('gpio_15.html')
 def gpio_15_state_function():
 	pin_state = rdb.get('gpio_15')
-	if pin_state == b'ON':
+	schedule_pin_state = rdb.get('schedule_gpio_15')
+	if pin_state == b'ON' or schedule_pin_state == b'ON':
 		pin_state = 1
 	else:
 		pin_state = 0

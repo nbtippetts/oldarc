@@ -16,15 +16,24 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     
-    <link rel="stylesheet" type="text/css" href="{% static 'schedule/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
 
   <!-- Custom fonts for this template-->
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
   <!-- Custom styles for this template-->
-  <link href="{% static 'schedule/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-  <link href="{% static 'schedule/css/sb-admin-2.min.css' %}" rel="stylesheet">
-
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+<style>
+  @media screen and (min-width: 0px) and (max-width: 765px) {
+    #chart_content {
+      display: none;
+    }
+    #chart_tit {
+      display: none;
+    }
+  }
+</style>
 </head>
 
 <body id="page-top">
@@ -117,14 +126,14 @@
 
             <!-- Area Chart -->
             <div class="col-xl-8 col-lg-7">
-              <div class="card shadow mb-4">
+              <div id="chart_tit" class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">Temperature/Humidity Overview</h6>
                 </div>
                 <!-- Card Body -->
-                <div class="card-body">
-                    {% humidity %}
+                <div id="chart_content" class="card-body">
+                  {% humidity %}
                 </div>
               </div>
               {% humidity_temp_form %}
@@ -142,32 +151,51 @@
                 <div class="card-body">
                   {% show_gpio_14_schedule %}
                   {% show_gpio_15_schedule %}
-                  <div class="mt-4 text-center small">
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> Direct
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> Social
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> Referral
-                    </span>
-                  </div>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
                   {% schedule_form %}
                   <div class="mt-4 text-center small">
                     <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> Direct
+                      <i class="fas fa-circle text-primary"></i> Temp/Humidity
                     </span>
                     <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> Social
+                      <i class="fas fa-circle text-success"></i> Lights
                     </span>
                     <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> Referral
+                      <i class="fas fa-circle text-info"></i> Water
+                    </span>
+                    <span class="mr-2">
+                      <i class="fas fa-circle text-warning"></i> Exhust
                     </span>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xl-6 col-lg-5">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="padding-bottom: 0px;">
+                  <h6 class="m-0 font-weight-bold text-primary">Lighting Log</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  {% show_gpio_14_schedule_log %}
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-5">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="padding-bottom: 0px;">
+                  <h6 class="m-0 font-weight-bold text-primary">Water Logs</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  {% show_gpio_15_schedule_log %}
                 </div>
               </div>
             </div>
@@ -221,14 +249,14 @@
   </div>
 
   <!-- Bootstrap core JavaScript-->
-  <script src="{% static 'schedule/vendor/jquery/jquery.min.js' %}"></script>
-  <script src="{% static 'schedule/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
   <!-- Core plugin JavaScript-->
-  <script src="{% static 'schedule/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+  <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
   <!-- Custom scripts for all pages-->
-  <script src="{% static 'schedule/js/sb-admin-2.min.js' %}"></script>
+  <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -237,7 +265,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <!-- Page level plugins -->
-  <script src="{% static 'schedule/js/demo/chart-pie-demo.js' %}"></script>
+  <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
 <!-- <script type="text/javascript">
