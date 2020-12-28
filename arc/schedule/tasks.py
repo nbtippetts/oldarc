@@ -136,7 +136,7 @@ def start_task_15(self, status):
 		except Exception as e:
 			pass
 
-@app.task(bind=True,queue="queue_relay_14",max_retry=0,ignore_results=True)
+@app.task(bind=True,queue="queue_schedule_14",max_retry=0,ignore_results=True)
 def relay_task_14(self, status,pin):
 	relay = gpiozero.OutputDevice(pin, active_high=False, initial_value=False)
 	task = Relay.objects.get(gpio_pin=14)
@@ -162,7 +162,7 @@ def relay_task_14(self, status,pin):
 		except Exception as e:
 			pass
 
-@app.task(bind=True,queue="queue_relay_15",max_retry=0,ignore_results=True)
+@app.task(bind=True,queue="queue_schedule_15",max_retry=0,ignore_results=True)
 def relay_task_15(self, status,pin):
 	relay = gpiozero.OutputDevice(pin, active_high=False, initial_value=False)
 	task = Relay.objects.get(gpio_pin=15)

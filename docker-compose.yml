@@ -105,49 +105,49 @@ services:
       - redis
       - web
 
-  queue_relay_14:
-    restart: always
-    build: ./arc
-    command: bash -c "celery -A arc worker -Q queue_relay_14"
-    devices:
-      - "/dev/gpiomem:/dev/gpiomem"
-      - "/dev/mem:/dev/mem"
-    privileged: true
-    networks:  # <-- connect to the bridge
-      - web_network
-      - nginx_network
-      - db_network  # <-- connect to the bridge
-      - redis_network  # <-- connect to the bridge
-    volumes:
-      - ./arc:/arc
-    depends_on:
-      - db
-      - redis
-      - web
+  # queue_relay_14:
+  #   restart: always
+  #   build: ./arc
+  #   command: bash -c "celery -A arc worker -Q queue_relay_14"
+  #   devices:
+  #     - "/dev/gpiomem:/dev/gpiomem"
+  #     - "/dev/mem:/dev/mem"
+  #   privileged: true
+  #   networks:  # <-- connect to the bridge
+  #     - web_network
+  #     - nginx_network
+  #     - db_network  # <-- connect to the bridge
+  #     - redis_network  # <-- connect to the bridge
+  #   volumes:
+  #     - ./arc:/arc
+  #   depends_on:
+  #     - db
+  #     - redis
+  #     - web
 
-  queue_relay_15:
-    restart: always
-    build: ./arc
-    command: bash -c "celery -A arc worker -Q queue_relay_15"
-    devices:
-      - "/dev/gpiomem:/dev/gpiomem"
-      - "/dev/mem:/dev/mem"
-    privileged: true
-    networks:  # <-- connect to the bridge
-      - web_network
-      - nginx_network
-      - db_network  # <-- connect to the bridge
-      - redis_network  # <-- connect to the bridge
-    volumes:
-      - ./arc:/arc
-    depends_on:
-      - db
-      - redis
-      - web
+  # queue_relay_15:
+  #   restart: always
+  #   build: ./arc
+  #   command: bash -c "celery -A arc worker -Q queue_relay_15"
+  #   devices:
+  #     - "/dev/gpiomem:/dev/gpiomem"
+  #     - "/dev/mem:/dev/mem"
+  #   privileged: true
+  #   networks:  # <-- connect to the bridge
+  #     - web_network
+  #     - nginx_network
+  #     - db_network  # <-- connect to the bridge
+  #     - redis_network  # <-- connect to the bridge
+  #   volumes:
+  #     - ./arc:/arc
+  #   depends_on:
+  #     - db
+  #     - redis
+  #     - web
   queue_schedule_14:
     restart: always
     build: ./arc
-    command: bash -c "celery -A arc worker -Q queue_schedule_14"
+    command: bash -c "celery -A arc worker -Q queue_schedule_14 -c 2"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
@@ -166,7 +166,7 @@ services:
   queue_schedule_15:
     restart: always
     build: ./arc
-    command: bash -c "celery -A arc worker -Q queue_schedule_15"
+    command: bash -c "celery -A arc worker -Q queue_schedule_15 -c 2"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"

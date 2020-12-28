@@ -26,7 +26,7 @@ SECRET_KEY = 'if&(y*+3iya!ix#)xh=ycq5y&8i36@exr&kkl_og2_7$(##u(q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['172.21.0.1','174.52.250.10', 'arc.dev', 'arc', '192.168.1.18', '172.18.0.1', 'web', '0.0.0.0', 'localhost', '127.0.0.1', 'redis', '[::1]']
+ALLOWED_HOSTS = ['172.21.0.2', '172.21.0.1','174.52.250.10', 'arc.dev', 'arc', '192.168.1.18', '172.18.0.1', 'web', '0.0.0.0', 'localhost', '127.0.0.1', 'redis', '[::1]']
 
 
 # Application definition
