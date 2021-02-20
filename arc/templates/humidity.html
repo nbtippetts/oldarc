@@ -1,4 +1,61 @@
-<ul class="list-group">
-	<li class="list-group-item list-group-item-light">Humidity<br>{{ humidity }}%</li>
-	<li class="list-group-item list-group-item-light">Temperature<br>{{ temp }} C</li>
-</ul>
+{% extends 'base.html' %}
+{% load humidity_display %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div id="content-wrapper" class="d-flex flex-column">
+<div class="content">
+	<div class="container-fluid">
+<div class="row justify-content-center">
+
+	<!-- Area Chart -->
+	<div class="col-xl-11 col-lg-7 mb-4">
+		<div id="chart_tit" class="card shadow mb-4">
+			<!-- Card Header - Dropdown -->
+			<div class="card-header py-3 d-flex flex-row align-items-center justify-content-around">
+				<h6 class="m-0 font-weight-bold text-primary">Temperature/Humidity Overview</h6>
+			</div>
+			<div class="h5 mb-0 font-weight-bold text-gray-800">{% show_temp_humidity %}</div>
+			<!-- Card Body -->
+			<div id="chart_content" class="card-body" style="padding-top: 0px;">
+				{% humidity_tag %}
+			</div>
+		</div>
+		{% humidity_temp_form %}
+	</div>
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-xl-11 col-lg-5 mb-4">
+			<div class="card shadow mb-4">
+				<!-- Card Header - Dropdown -->
+				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+					style="padding-bottom: 0px;">
+					<h6 class="m-0 font-weight-bold text-primary">Humidity / Temperature Logs</h6>
+				</div>
+				<!-- Card Body -->
+				<div class="card-body">
+					<table class="table table-bordered" style="margin-top: 0px;">
+						<thead>
+							<tr>
+								<th>Humidity %</th>
+								<th>Temp *C</th>
+								<th>TimeStamp</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for d in data %}
+							<tr>
+								<td style="font-size: 14px;">{{ d.humidity }}</td>
+								<td style="font-size: 14px;">{{ d.temp }}</td>
+								<td style="font-size: 14px;">{{ d.created_at }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+</div>
+{% endblock %}

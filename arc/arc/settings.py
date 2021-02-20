@@ -26,7 +26,8 @@ SECRET_KEY = 'if&(y*+3iya!ix#)xh=ycq5y&8i36@exr&kkl_og2_7$(##u(q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['172.21.0.2', '172.21.0.1','174.52.250.10', 'arc.dev', 'arc', '192.168.1.18', '172.18.0.1', 'web', '0.0.0.0', 'localhost', '127.0.0.1', 'redis', '[::1]']
+# ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*', '172.21.0.2', '172.21.0.1','174.52.250.10', 'arc.dev', 'arc', '192.168.1.18', '172.18.0.1', 'web', '0.0.0.0', 'localhost', '127.0.0.1', 'redis', '[::1]']
 
 
 # Application definition
@@ -41,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_celery_beat',
     'bootstrap4',
     'django_forms_bootstrap',
     'bootstrap_datepicker_plus',
@@ -94,25 +94,11 @@ DATABASES = {
         'NAME': 'arc_db',
         'USER': 'pi',
         'PASSWORD': 'rnautomations',
-        'HOST': 'db',
-        # 'HOST': 'localhost',
+        # 'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': 5432,
     }
 }
-
-# CELERYD_TASK_SOFT_TIME_LIMIT = 9000
-
-# CELERY_ENABLE_UTC = True
-# CELERY_BROKER_URL = 'redis://localhost:6379/0'
-# CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
-# CELERY_BROKER_TRANSPORT = 'redis'
-
-CELERY_ENABLE_UTC = True
-CELERY_BROKER_URL = 'redis://redis:6379/0'
-CELERY_RESULT_BACKEND = "redis://redis:6379/0"
-CELERY_BROKER_TRANSPORT = 'redis'
-
-CELERY_TIMEZONE = 'America/Denver'
 
 BOOTSTRAP4 = {
     'include_jquery': True,

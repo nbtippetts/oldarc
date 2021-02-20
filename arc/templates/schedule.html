@@ -1,20 +1,98 @@
-{% extends "base.html" %}
+
+{% extends 'base.html' %}
+{% load schedule_display %}
 {% load crispy_forms_tags %}
 {% block content %}
-
-{% for water in waters %}
-<article class="media content-section">
-	<div class="media-body">
-		<!-- <div class="article-metadata">
-			<a class="mr-2" href="#">{{ water.last_water }}</a>
-			<small class="text-muted">{{ water.next_water }}</small>
-		</div> -->
-		<h2 class="article-title">Water Log: {{ water.start_date }}</h2>
-		<p class="article-content">start {{ water.start }}</p>
-		<p class="article-content">deration {{ water.deration }}</p>
-		<p class="article-content">finish {{ water.finish }}</p>
-		<p class="article-content">how_often {{ water.how_often }}</p>
+<div id="content-wrapper" class="d-flex flex-column">
+	<div class="content">
+		<div class="container-fluid">
+		<div class="row justify-content-around">
+			<!-- Pie Chart -->
+			<div class="col-xl-3 col-md-4 mb-4">
+				<div class="card shadow mb-4">
+					<!-- Card Header - Dropdown -->
+					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+						<h6 class="m-0 font-weight-bold text-primary">Lighting Schedule</h6>
+		
+					</div>
+					<!-- Card Body -->
+					<div class="card-body">
+						{% show_gpio_14_schedule %}
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-3 col-md-4 mb-4">
+				<div class="card shadow mb-4">
+					<!-- Card Header - Dropdown -->
+					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+						<h6 class="m-0 font-weight-bold text-primary">Watering Schedule</h6>
+			
+					</div>
+					<!-- Card Body -->
+					<div class="card-body">
+						{% show_gpio_15_schedule %}
+					</div>
+					<!-- Card Body -->
+				</div>
+			</div>
+			<div class="col-xl-3 col-md-4 mb-4">
+				<div class="card shadow mb-4">
+					<!-- Card Header - Dropdown -->
+					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+						<h6 class="m-0 font-weight-bold text-primary">Schedule</h6>
+			
+					</div>
+					<!-- Card Body -->
+					<div class="card-body">
+						{% schedule_form %}
+						<div class="mt-4 text-center small">
+							<span class="mr-2">
+								<i class="fas fa-circle text-primary"></i> Temp/Humidity
+							</span>
+							<span class="mr-2">
+								<i class="fas fa-circle text-success"></i> Lights
+							</span>
+							<span class="mr-2">
+								<i class="fas fa-circle text-info"></i> Water
+							</span>
+							<span class="mr-2">
+								<i class="fas fa-circle text-warning"></i> Exhust
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row justify-content-around">
+			<div class="col-xl-6 col-lg-5">
+				<div class="card shadow mb-4">
+					<!-- Card Header - Dropdown -->
+					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+						style="padding-bottom: 0px;">
+						<h6 class="m-0 font-weight-bold text-primary">Lighting Log</h6>
+					</div>
+					<!-- Card Body -->
+					<div class="card-body">
+						{% show_gpio_14_schedule_log %}
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-6 col-lg-5">
+				<div class="card shadow mb-4">
+					<!-- Card Header - Dropdown -->
+					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+						style="padding-bottom: 0px;">
+						<h6 class="m-0 font-weight-bold text-primary">Water Logs</h6>
+					</div>
+					<!-- Card Body -->
+					<div class="card-body">
+						{% show_gpio_15_schedule_log %}
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-</article>
-{% endfor %}
-{% endblock content %}
+</div>
+</div>
+{% endblock %}

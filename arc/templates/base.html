@@ -1,5 +1,5 @@
-{% load schedule_display %}
 {% load humidity_display %}
+{% load schedule_display %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -37,15 +37,35 @@
 </head>
 
 <body id="page-top">
-
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <!-- Sidebar -->
-    <!-- End of Sidebar -->
-
+    
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Sidebar -->
+      <nav class="sb-topnav navbar navbar-expand-md navbar-dark bg-dark">
+        <a class="navbar-brand" href="{% url 'homepage' %}">ARC</a>
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'schedule' %}">Schedule</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'humidity_view' %}">Humidity/Temperature</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'video_view' %}">Camera Feed</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <!-- End of Sidebar -->
 
       <!-- Main Content -->
       <div id="content">
@@ -55,35 +75,21 @@
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">ARC</h1>
+            <h1 class="h3 mb-0 text-gray-800"></h1>
           </div>
 
           <!-- Content Row -->
-          <div class="row">
+          <div class="row justify-content-around">
 
             <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Temperature/Humidity</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">{% show_temp_humidity %}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-3 col-md-4 mb-4">
               <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Lights</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">{% gpio_14_state_function %}</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">{% relay_14 %}</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                   </div>
                 </div>
@@ -91,14 +97,14 @@
             </div>
 
             <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-3 col-md-4 mb-4">
               <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Water</div>
-                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{% gpio_15_state_function %}</div>
-                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{% relay_15 %}</div>
+                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
+                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
                     </div>
                   </div>
                 </div>
@@ -106,100 +112,18 @@
             </div>
 
             <!-- Pending Requests Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-3 col-md-4 mb-4">
               <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Exhust</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">{% gpio_18_state_function %}</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Content Row -->
-
-          <div class="row">
-
-            <!-- Area Chart -->
-            <div class="col-xl-8 col-lg-7">
-              <div id="chart_tit" class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Temperature/Humidity Overview</h6>
-                </div>
-                <!-- Card Body -->
-                <div id="chart_content" class="card-body">
-                  {% humidity %}
-                </div>
-              </div>
-              {% humidity_temp_form %}
-            </div>
-
-            <!-- Pie Chart -->
-            <div class="col-xl-4 col-lg-5">
-              <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Your Schedule</h6>
-
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                  {% show_gpio_14_schedule %}
-                  {% show_gpio_15_schedule %}
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                  {% schedule_form %}
-                  <div class="mt-4 text-center small">
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> Temp/Humidity
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> Lights
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> Water
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-warning"></i> Exhust
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-xl-6 col-lg-5">
-              <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="padding-bottom: 0px;">
-                  <h6 class="m-0 font-weight-bold text-primary">Lighting Log</h6>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                  {% show_gpio_14_schedule_log %}
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-6 col-lg-5">
-              <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="padding-bottom: 0px;">
-                  <h6 class="m-0 font-weight-bold text-primary">Water Logs</h6>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                  {% show_gpio_15_schedule_log %}
-                </div>
-              </div>
-            </div>
-          </div>
 
           <!-- Content Row -->
         </div>
@@ -207,6 +131,8 @@
 
       </div>
       <!-- End of Main Content -->
+    </div>
+      {% block content %}{% endblock %}
 
       <!-- Footer -->
       <footer class="sticky-footer bg-white">
@@ -223,30 +149,10 @@
 
   </div>
   <!-- End of Page Wrapper -->
-
   <!-- Scroll to Top Button-->
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
-
-  <!-- Logout Modal-->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login.html">Logout</a>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Bootstrap core JavaScript-->
   <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
@@ -268,19 +174,6 @@
   <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
-<!-- <script type="text/javascript">
-    var ctx_bar = document.getElementById('#temp_humidity_ajax');
-      $.ajax({
-       type: 'GET',
-       url: "{% url 'ajax_humidity' %}",
-       success: function (data) {
-        console.log(data);
-        $('#temp_ajax').html('Temperature '+data.current_temp);
-        $('#humidity_ajax').html('humidity '+data.current_humidity);
-       },
-       timeout: 30
-     });
-  </script> -->
 </body>
 
 </html>

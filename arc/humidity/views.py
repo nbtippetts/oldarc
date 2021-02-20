@@ -5,27 +5,9 @@ from .forms import HumidityTempForm
 from .hum_temp import get_humidity_temperature
 import datetime
 
+
 def humidity(request):
-	current_humidity, current_temp = get_humidity_temperature()
-	form = HumidityTempForm()
-	data = HumidityTemp.objects.all().order_by('-created_at')[:10]
-	try:
-		current_values = HumidityTempValues.objects.get(pk=1)
-	except Exception as e:
-		h = HumidityTempValues(
-			humidity_value=0.0,
-			temp_value=0.0
-		)
-		h.save()
-		current_values = HumidityTempValues.objects.get(pk=1)
-		pass
-	context = {'data': data,
-	'form':form,
-	'current_humidity':current_humidity,
-	'current_temp':current_temp,
-	'humidity_value':current_values.humidity_value,
-	'temp_value':current_values.temp_value,}
-	return redirect('/', context)
+	return render(request, 'humidity.html')
 
 def set_humidity_temp(request):
 	if request.method == 'POST':
@@ -33,17 +15,17 @@ def set_humidity_temp(request):
 		if form.is_valid():
 			data = HumidityTempValues.objects.get(pk=1)
 			data.humidity_value = form.cleaned_data['humidity_value']
+			data.buffer_value = form.cleaned_data['buffer_value']
 			data.temp_value = form.cleaned_data['temp_value']
 			data.save()
 			print('Humidity and Tempature values saved successfully.')
-			form = HumidityTempForm()
 			ht_obj = HumidityTemp.objects.all().order_by('-created_at')[:10]
 			context = {'data': ht_obj,'form':form}
-			return redirect('/',context)
+			return render(request, 'humidity.html',context)
 
 		ht_obj = HumidityTemp.objects.all().order_by('-created_at')[:10]
 		context = {'data': ht_obj,'form':form}
-		return redirect('/',context)
+		return render(request, 'humidity.html',context)
 
 def ajax_humidity(request):
 	current_humidity, current_temp = get_humidity_temperature()
