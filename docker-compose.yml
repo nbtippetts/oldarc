@@ -9,7 +9,7 @@ services:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
     privileged: true
-    expose: 
+    expose:
       - 8000
     volumes:
       - ./arc:/arc
@@ -69,7 +69,7 @@ services:
   celery:
     restart: always
     build: ./arc
-    command: bash -c "celery -A arc worker"
+    command: bash -c "celery -A arc worker && celery -A arc worker -Q queue_humidity -c 2"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
       - "/dev/mem:/dev/mem"
@@ -85,25 +85,25 @@ services:
       - db
       - redis
       - web
-  queue_humidity:
-    restart: always
-    build: ./arc
-    command: bash -c "celery -A arc worker -Q queue_humidity -c 2"
-    devices:
-      - "/dev/gpiomem:/dev/gpiomem"
-      - "/dev/mem:/dev/mem"
-    privileged: true
-    networks:  # <-- connect to the bridge
-      - web_network
-      - nginx_network
-      - db_network  # <-- connect to the bridge
-      - redis_network  # <-- connect to the bridge
-    volumes:
-      - ./arc:/arc
-    depends_on:
-      - db
-      - redis
-      - web
+  # queue_humidity:
+    # restart: always
+    # build: ./arc
+    # command: bash -c "celery -A arc worker -Q queue_humidity -c 2"
+    # devices:
+    #   - "/dev/gpiomem:/dev/gpiomem"
+    #   - "/dev/mem:/dev/mem"
+    # privileged: true
+    # networks:  # <-- connect to the bridge
+    #   - web_network
+    #   - nginx_network
+    #   - db_network  # <-- connect to the bridge
+    #   - redis_network  # <-- connect to the bridge
+    # volumes:
+    #   - ./arc:/arc
+    # depends_on:
+    #   - db
+    #   - redis
+    #   - web
 
   # queue_relay_14:
   #   restart: always
@@ -182,6 +182,25 @@ services:
       - db
       - redis
       - web
+  # queue_schedule_15:
+  #   restart: always
+  #   build: ./arc
+  #   command: bash -c "celery -A arc worker -Q queue_schedule_15"
+  #   devices:
+  #     - "/dev/gpiomem:/dev/gpiomem"
+  #     - "/dev/mem:/dev/mem"
+  #   privileged: true
+  #   networks:  # <-- connect to the bridge
+  #     - web_network
+  #     - nginx_network
+  #     - db_network  # <-- connect to the bridge
+  #     - redis_network  # <-- connect to the bridge
+  #   volumes:
+  #     - ./arc:/arc
+  #   depends_on:
+  #     - db
+  #     - redis
+  #     - web
 
   celery-beat:
     restart: always
