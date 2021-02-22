@@ -13,7 +13,7 @@ from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 
 
 jobstores = {
-  'default': SQLAlchemyJobStore(url='postgresql+psycopg2://pi:rnautomations@localhost:5432/arc_db')
+  'default': SQLAlchemyJobStore(url='postgresql+psycopg2://pi:rnautomations@db:5432/arc_db')
 }
 executors = {
   'default': ThreadPoolExecutor(20),
@@ -52,15 +52,14 @@ def humidity_temperature_logs():
 		if humidity is not None and temperature is not None:
 			new_humidity = "{0:0.1f}%".format(humidity)
 			new_temperature = "{0:0.1f}*C".format(temperature)
+			ht_log = HumidityTemp()
+			ht_log.humidity = new_humidity
+			ht_log.temp = new_temperature
+			ht_log.save()
 			break
 		else:
 			print('Failed to retrieve data from humidity sensor.')
 			continue
-	ht_log = HumidityTemp()
-	ht_log.humidity = new_humidity
-	ht_log.temp = new_temperature
-	ht_log.save()
-	return
 
 def exhust_relay_job():
 	print('exhust_relay_job 1')

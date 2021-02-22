@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import StreamingHttpResponse
-# from streamapp.camera import VideoCamera
+from streamapp.camera import VideoCamera
 # Create your views here.
 
 def index(request):
