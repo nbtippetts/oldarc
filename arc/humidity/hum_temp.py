@@ -3,10 +3,8 @@ import gpiozero
 import time
 from datetime import datetime, timedelta
 import gpiozero
-from .models import HumidityTempValues, Exhust
+from .models import HumidityTemp, HumidityTempValues, Exhust
 from pytz import utc
-import os
-import requests
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -43,6 +41,26 @@ def get_humidity_temperature():
 			continue
 	print(new_humidity,new_temperature)
 	return new_humidity, new_temperature
+
+def humidity_temperature_logs():
+	sensor = Adafruit_DHT.DHT22
+	pin =4
+	new_humidity = 0.0
+	new_temperature = 0.0
+	while True:
+		humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
+		if humidity is not None and temperature is not None:
+			new_humidity = "{0:0.1f}%".format(humidity)
+			new_temperature = "{0:0.1f}*C".format(temperature)
+			break
+		else:
+			print('Failed to retrieve data from humidity sensor.')
+			continue
+	ht_log = HumidityTemp()
+	ht_log.humidity = new_humidity
+	ht_log.temp = new_temperature
+	ht_log.save()
+	return
 
 def exhust_relay_job():
 	print('exhust_relay_job 1')
@@ -170,5 +188,5 @@ def check_hum_temp():
 scheduler.add_job(check_hum_temp, 'interval', seconds=5, id='humidity_temp_job_id', replace_existing=True)
 scheduler.add_job(exhust_relay_job, 'interval', seconds=7, id='exhust_job_id', replace_existing=True)
 scheduler.add_job(humidifer_relay_job, 'interval', seconds=7, id='humidifer_job_id', replace_existing=True)
+scheduler.add_job(humidity_temperature_logs, 'interval', seconds=300, id='humidity_temperature_logs_job_id', replace_existing=True)
 scheduler.start()
-

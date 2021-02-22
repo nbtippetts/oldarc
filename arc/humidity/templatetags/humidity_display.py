@@ -28,12 +28,13 @@ def humidity_tag():
 	# charts_list = []
 	# for d in data:
 	# 	charts_list.append(d.created_at.strftime("%Y-%m-%d %H:%M:%S"))
-	return {'data': data,
-	'form':form,
-	# 'current_humidity':current_humidity,
-	# 'current_temp':current_temp,
-	'humidity_value':current_values.humidity_value,
-	'temp_value':current_values.temp_value,}
+	return {
+		'data': data,
+		'form':form,
+		# 'current_humidity':current_humidity,
+		# 'current_temp':current_temp,
+		'humidity_value':current_values.humidity_value,
+		'temp_value':current_values.temp_value,}
 
 @register.inclusion_tag('set_humidity_temp.html')
 def humidity_temp_form():
