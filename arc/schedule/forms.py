@@ -45,16 +45,11 @@ select_how_often = (
 	(timedelta(hours=48), '48:00'),
 )
 
-class DateInput(forms.DateInput):
-	input_type = 'date'
 class TimeInput(forms.TimeInput):
 	input_type = 'time'
 
 
 class ScheduleForm(forms.Form):
-	start_date = forms.DateField(
-		widget=DateInput
-	)
 	start = forms.TimeField(
 		widget=TimeInput
 	)

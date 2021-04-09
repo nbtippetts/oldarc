@@ -23,6 +23,7 @@ services:
       - db
 
   nginx:
+    restart: always
     build: ./nginx
     volumes:
       - ./arc:/arc

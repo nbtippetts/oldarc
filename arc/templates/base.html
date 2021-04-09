@@ -53,15 +53,30 @@
         <!-- Navbar links -->
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'schedule' %}">Schedule</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'humidity_view' %}">Humidity/Temperature</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'video_view' %}">Camera Feed</a>
-            </li>
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'schedule' %}">Schedule</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'humidity_view' %}">Humidity/Temperature</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'video_view' %}">Camera Feed</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+              </li>
+            {% endif %}
           </ul>
         </div>
       </nav>
@@ -75,6 +90,14 @@
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+            
             <h1 class="h3 mb-0 text-gray-800"></h1>
           </div>
 

@@ -14,6 +14,7 @@ from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 
 jobstores = {
   'default': SQLAlchemyJobStore(url='postgresql+psycopg2://pi:rnautomations@db:5432/arc_db')
+#   'default': SQLAlchemyJobStore(url='postgresql+psycopg2://pi:rnautomations@localhost:5432/arc_db')
 }
 executors = {
   'default': ThreadPoolExecutor(20),
@@ -180,8 +181,8 @@ def check_hum_temp():
 
 
 
-scheduler.add_job(check_hum_temp, 'interval', seconds=5, id='humidity_temp_job_id', replace_existing=True)
-scheduler.add_job(exhust_relay_job, 'interval', seconds=7, id='exhust_job_id', replace_existing=True)
-scheduler.add_job(humidifer_relay_job, 'interval', seconds=7, id='humidifer_job_id', replace_existing=True)
-scheduler.add_job(humidity_temperature_logs, 'interval', seconds=30, id='humidity_temperature_logs_job_id', replace_existing=True)
+scheduler.add_job(check_hum_temp, 'interval', seconds=50, id='humidity_temp_job_id', replace_existing=True)
+scheduler.add_job(exhust_relay_job, 'interval', seconds=70, id='exhust_job_id', replace_existing=True)
+scheduler.add_job(humidifer_relay_job, 'interval', seconds=70, id='humidifer_job_id', replace_existing=True)
+scheduler.add_job(humidity_temperature_logs, 'interval', seconds=300, id='humidity_temperature_logs_job_id', replace_existing=True)
 scheduler.start()

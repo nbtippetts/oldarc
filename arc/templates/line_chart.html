@@ -1,6 +1,6 @@
 {% load static %}
 
-<canvas id="myBarChart"></canvas>
+<canvas id="myLineChart"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
@@ -12,10 +12,10 @@
 		blue: 'rgb(54, 162, 235)'
 	};
 	var humid_colors = [chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue]
-	var temp_colors = [chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue,chartColors.blue]
-	var ctx_bar = document.getElementById('myBarChart').getContext('2d');
+	var temp_colors = [chartColors.red,chartColors.red,chartColors.red,chartColors.red,chartColors.red]
+	var ctx_bar = document.getElementById('myLineChart').getContext('2d');
 	var bar_chart = new Chart(ctx_bar, {
-		type: 'bar',
+		type: 'line',
 		data: {
 			labels: [{% for d in data %} "{{ d.created_at }}", {% endfor %}],
 			datasets: [{
@@ -40,20 +40,20 @@
 			}
 		}
 	});
-	var humid_value = 38; //set this to whatever is the deciding color change value
-	var dataset_humid = bar_chart.data.datasets[0];
-	for (var i = 0; i < dataset_humid.data.length; i++) {
-		if (dataset_humid.data[i] >= humid_value) {
-			dataset_humid.backgroundColor[i] = chartColors.red;
-		}
-	}
-	var temp_value = 28;
-	var dataset_temp = bar_chart.data.datasets[1];
-	for (var i = 0; i < dataset_temp.data.length; i++) {
-		if (dataset_temp.data[i] >= temp_value) {
-			dataset_temp.backgroundColor[i] = chartColors.red;
-		}
-	}
-	bar_chart.update();
+	// var humid_value = 38; //set this to whatever is the deciding color change value
+	// var dataset_humid = bar_chart.data.datasets[0];
+	// for (var i = 0; i < dataset_humid.data.length; i++) {
+	// 	if (dataset_humid.data[i] >= humid_value) {
+	// 		dataset_humid.backgroundColor[i] = chartColors.red;
+	// 	}
+	// }
+	// var temp_value = 28;
+	// var dataset_temp = bar_chart.data.datasets[1];
+	// for (var i = 0; i < dataset_temp.data.length; i++) {
+	// 	if (dataset_temp.data[i] >= temp_value) {
+	// 		dataset_temp.backgroundColor[i] = chartColors.red;
+	// 	}
+	// }
+	// bar_chart.update();
 
 </script>

@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*', '172.21.0.2', '172.21.0.1','174.52.250.10', 'arc.dev', 'ar
 
 # Application definition
 INSTALLED_APPS = [
+    'users.apps.UsersConfig',
     'humidity.apps.HumidityConfig',
     'schedule.apps.ScheduleConfig',
     'streamapp.apps.StreamappConfig',
@@ -148,3 +149,12 @@ STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'static')
 
 # do the same for media files, it must match /opt/services/djangoapp/media/
 MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'media')
+
+LOGIN_REDIRECT_URL='homepage'
+LOGIN_URL='login'
+EMAIL_BACKED='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST='stmp.gmail.com'
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER='nbtippetts@gmail.com'
+EMAIL_HOST_PASSWORD='wicked2007'

@@ -26,7 +26,7 @@ def humidity_tag():
 		current_values = HumidityTempValues.objects.get(pk=1)
 		pass
 	# charts_list = []
-	# for d in data:
+	# for d in log_data:
 	# 	charts_list.append(d.created_at.strftime("%Y-%m-%d %H:%M:%S"))
 	return {
 		'data': data,
@@ -35,6 +35,12 @@ def humidity_tag():
 		# 'current_temp':current_temp,
 		'humidity_value':current_values.humidity_value,
 		'temp_value':current_values.temp_value,}
+
+@register.inclusion_tag('log_data.html')
+def log_data():	
+	log_data = HumidityTemp.objects.all().order_by('-created_at')[:25]
+	return {
+		'table_log_data': log_data,}
 
 @register.inclusion_tag('set_humidity_temp.html')
 def humidity_temp_form():

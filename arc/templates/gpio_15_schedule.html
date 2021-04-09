@@ -1,9 +1,0 @@
-<ul class="list-group">
-	{% for w in latest_schedule %}
-			<li class="list-group-item list-group-item-light">Water</li>
-			<li class="list-group-item list-group-item-light">Start<br>{{ w.start }}</li>
-			<li class="list-group-item list-group-item-light">Finish<br>{{ w.finish }}</li>
-			<li class="list-group-item list-group-item-light">Deration<br>{{ w.deration|time:'H:i' }} HRS</li>
-			<li class="list-group-item list-group-item-light">How Often<br>{{ w.how_often|time:'H:i' }} HRS</li>
-	{% endfor %}
-</ul>
