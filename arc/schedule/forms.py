@@ -12,6 +12,7 @@ select_gpio_pin = (
 	(15, 'Water')
 )
 select_duration = (
+	(timedelta(seconds=10), '00:00:10'),
 	(timedelta(minutes=2), '00:02'),
 	(timedelta(minutes=30), '00:30'),
 	(timedelta(hours=1), '01:00'),
@@ -20,6 +21,7 @@ select_duration = (
 	(timedelta(hours=2, minutes=30), '02:30'),
 )
 select_how_often = (
+	(timedelta(seconds=20), '00:00:20'),
 	(timedelta(minutes=3), '00:03'),
 	(timedelta(hours=3), '03:00'),
 	(timedelta(hours=3, minutes=30), '03:30'),

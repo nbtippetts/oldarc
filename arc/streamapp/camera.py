@@ -1,4 +1,3 @@
-
 from imutils.video import VideoStream
 from django.conf import settings
 import threading

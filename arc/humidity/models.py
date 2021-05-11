@@ -16,7 +16,7 @@ class HumidityTempValues(models.Model):
 	temp_value = models.DecimalField(max_digits=6, decimal_places=2, default=0.0)
 	created_at = models.DateTimeField(default=timezone.now)
 
-class Exhust(models.Model):
+class Exhaust(models.Model):
 	job_id = models.TextField(default='')
 	status = models.TextField(default='')
 	created_at = models.DateTimeField(default=timezone.now)

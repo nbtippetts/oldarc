@@ -2,8 +2,7 @@ import Adafruit_DHT
 import gpiozero
 import time
 from datetime import datetime, timedelta
-import gpiozero
-from .models import HumidityTemp, HumidityTempValues, Exhust
+from .models import HumidityTemp, HumidityTempValues, Exhaust
 from pytz import utc
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -22,7 +21,7 @@ executors = {
 }
 job_defaults = {
   'coalesce': False,
-  'max_instances': 4
+  'max_instances': 3
 }
 scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=utc)
 
@@ -58,35 +57,35 @@ def humidity_temperature_logs():
 			print('Failed to retrieve data from humidity sensor.')
 			continue
 
-def exhust_relay_job():
-	print('exhust_relay_job 1')
+def exhaust_relay_job():
+	print('exhaust_relay_job 1')
 	try:
 		while True:
-			e = Exhust.objects.get(pk=1)
-			print('exhust_relay_job 2')
+			e = Exhaust.objects.get(pk=1)
+			print('exhaust_relay_job 2')
 			print(e.status)
 			if e.status == 'True':
 				try:
 					relay = gpiozero.OutputDevice(18, active_high=False, initial_value=False)
-					print('exhust_job_id relay on')
+					print('exhaust_job_id relay on')
 					relay.on()
 				except Exception as e:
 					pass
-				# exhust_relay(True)
+				# exhaust_relay(True)
 			else:
 				break
 			time.sleep(5)
 	except Exception as e:
 		print(e)
-		print('exhust_relay_job 3')
-		e = Exhust(pk=1, job_id='exhust_job_id', status=False)
+		print('exhaust_relay_job 3')
+		e = Exhaust(pk=1, job_id='exhaust_job_id', status=False)
 		e.save()
 
 def humidifer_relay_job():
 	print('humidifer_relay_job 1')
 	try:
 		while True:
-			e = Exhust.objects.get(pk=2)
+			e = Exhaust.objects.get(pk=2)
 			print('humidifer_relay_job 2')
 			print(e.status)
 			if e.status == 'True':
@@ -96,14 +95,14 @@ def humidifer_relay_job():
 					relay.on()
 				except Exception as e:
 					pass
-				# exhust_relay(True)
+				# exhaust_relay(True)
 			else:
 				break
 			time.sleep(5)
 	except Exception as e:
 		print(e)
 		print('humidifer_relay_job 3')
-		e = Exhust(pk=2, job_id='humidifer_job_id', status=False)
+		e = Exhaust(pk=2, job_id='humidifer_job_id', status=False)
 		e.save()
 
 
@@ -125,45 +124,45 @@ def check_hum_temp():
 		if humidity >= humidity_positive or temperature >= temp_params:
 			scheduler.print_jobs()
 			try:
-				e = Exhust.objects.get(pk=1)
-				e.job_id='exhust_job_id'
+				e = Exhaust.objects.get(pk=1)
+				e.job_id='exhaust_job_id'
 				e.status=True
 				e.save()
-				scheduler.resume_job('exhust_job_id')
+				scheduler.resume_job('exhaust_job_id')
 				# time.sleep(5)
 			except Exception as e:
-				e = Exhust(pk=1, job_id='exhust_job_id', status=True)
+				e = Exhaust(pk=1, job_id='exhaust_job_id', status=True)
 				e.save()
 				# time.sleep(5)
 		else:
 			try:
-				e = Exhust.objects.get(pk=1)
-				e.job_id='exhust_job_id'
+				e = Exhaust.objects.get(pk=1)
+				e.job_id='exhaust_job_id'
 				e.status=False
 				e.save()
 				scheduler.print_jobs()
-				scheduler.pause_job('exhust_job_id')
+				scheduler.pause_job('exhaust_job_id')
 				# time.sleep(5)
 			except Exception as e:
-				e = Exhust(pk=1, job_id='exhust_job_id', status=False)
+				e = Exhaust(pk=1, job_id='exhaust_job_id', status=False)
 				e.save()
 				# time.sleep(5)
 		if humidity <= humidity_nagitive:
 			scheduler.print_jobs()
 			try:
-				e = Exhust.objects.get(pk=2)
+				e = Exhaust.objects.get(pk=2)
 				e.job_id='humidifer_job_id'
 				e.status=True
 				e.save()
 				scheduler.resume_job('humidifer_job_id')
 				# time.sleep(5)
 			except Exception as e:
-				e = Exhust(pk=2, job_id='humidifer_job_id', status=True)
+				e = Exhaust(pk=2, job_id='humidifer_job_id', status=True)
 				e.save()
 				# time.sleep(5)
 		else:
 			try:
-				e = Exhust.objects.get(pk=2)
+				e = Exhaust.objects.get(pk=2)
 				e.job_id='humidifer_job_id'
 				e.status=False
 				e.save()
@@ -171,7 +170,7 @@ def check_hum_temp():
 				scheduler.pause_job('humidifer_job_id')
 				# time.sleep(5)
 			except Exception as e:
-				e = Exhust(pk=2, job_id='humidifer_job_id', status=False)
+				e = Exhaust(pk=2, job_id='humidifer_job_id', status=False)
 				e.save()
 				# time.sleep(5)
 
@@ -181,8 +180,8 @@ def check_hum_temp():
 
 
 
-scheduler.add_job(check_hum_temp, 'interval', seconds=50, id='humidity_temp_job_id', replace_existing=True)
-scheduler.add_job(exhust_relay_job, 'interval', seconds=70, id='exhust_job_id', replace_existing=True)
-scheduler.add_job(humidifer_relay_job, 'interval', seconds=70, id='humidifer_job_id', replace_existing=True)
+scheduler.add_job(check_hum_temp, 'interval', seconds=5, id='humidity_temp_job_id', replace_existing=True)
+scheduler.add_job(exhaust_relay_job, 'interval', seconds=9, id='exhaust_job_id', replace_existing=True)
+scheduler.add_job(humidifer_relay_job, 'interval', seconds=9, id='humidifer_job_id', replace_existing=True)
 scheduler.add_job(humidity_temperature_logs, 'interval', seconds=300, id='humidity_temperature_logs_job_id', replace_existing=True)
 scheduler.start()

@@ -3,7 +3,7 @@
 # import time
 # from datetime import datetime, timedelta
 # import gpiozero
-# from .models import HumidityTempValues, Exhust
+# from .models import HumidityTempValues, Exhaust
 # from pytz import utc
 
 # class MyListener(keyboard.Listener):
