@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, time
 from django import forms
-from .models import Schedule
+from .models import Schedule,RelayStatus
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 on_off_gpio = (
@@ -68,3 +68,13 @@ class ScheduleForm(forms.Form):
 		model = Schedule
 
 
+
+class RelayStatus(forms.Form):
+	status = forms.ChoiceField(
+		choices=on_off_gpio
+	)
+	gpio_pin = forms.ChoiceField(
+		choices=select_gpio_pin
+	)
+	class Meta:
+		model = RelayStatus

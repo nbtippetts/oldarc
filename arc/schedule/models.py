@@ -23,3 +23,7 @@ class ScheduleLog(models.Model):
 	how_often = models.TimeField(blank=True, null=True)
 	run_time = models.TimeField(blank=True, null=True)
 	gpio_pin = models.IntegerField(default=0)
+
+class RelayStatus(models.Model):
+	status = models.TextField(default='')
+	gpio_pin = models.IntegerField(default=0)

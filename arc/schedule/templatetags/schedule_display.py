@@ -8,12 +8,29 @@ import RPi.GPIO as GPIO
 @register.inclusion_tag('gpio_14_schedule_log.html')
 def show_gpio_14_schedule_log():
 	latest_schedule = ScheduleLog.objects.filter(gpio_pin=14).order_by('-id')[:10]
-	return {'latest_schedule': latest_schedule}
+	if latest_schedule.exists():
+		return {'latest_schedule': latest_schedule}
+	else:
+		no_data = {
+			'start': '00:00:00',
+			'deration': '00:00:00',
+			'finish_date': '00:00:00'
+		}
+		return {'latest_schedule': no_data}
+
 
 @register.inclusion_tag('gpio_15_schedule_log.html')
 def show_gpio_15_schedule_log():
 	latest_schedule = ScheduleLog.objects.filter(gpio_pin=15).order_by('-id')[:10]
-	return {'latest_schedule': latest_schedule}
+	if latest_schedule.exists():
+		return {'latest_schedule': latest_schedule}
+	else:
+		no_data = {
+			'start': '00:00:00',
+			'deration': '00:00:00',
+			'finish_date': '00:00:00'
+		}
+		return{'latest_schedule': no_data}
 
 @register.inclusion_tag('gpio_14_schedule.html')
 def show_gpio_14_schedule():
@@ -35,6 +52,7 @@ def schedule_form():
 
 @register.inclusion_tag('gpio_14.html')
 def gpio_14_state_function():
+	pin_state = b'ON'
 	if pin_state == b'ON' or schedule_pin_state == b'ON':
 		pin_state = 1
 	else:
@@ -43,6 +61,7 @@ def gpio_14_state_function():
 
 @register.inclusion_tag('gpio_15.html')
 def gpio_15_state_function():
+	pin_state = b'ON'
 	if pin_state == b'ON' or schedule_pin_state == b'ON':
 		pin_state = 1
 	else:
