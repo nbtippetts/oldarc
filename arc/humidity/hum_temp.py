@@ -119,7 +119,8 @@ def check_hum_temp():
 	humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
 	if humidity is not None and temperature is not None:
 		new_humidity = "{0:0.1f}%".format(humidity)
-		new_temperature = "{0:0.1f}*C".format(temperature)
+		fahrenheit = (temperature * 9/5) + 32
+		new_temperature = "{0:0.1f}*F".format(fahrenheit)
 		print(new_humidity, new_temperature)
 		ht_params = HumidityTempValues.objects.get(pk=1)
 		print(ht_params.humidity_value,ht_params.buffer_value, ht_params.temp_value)
@@ -127,7 +128,23 @@ def check_hum_temp():
 		humidity_nagitive = ht_params.humidity_value-ht_params.buffer_value
 		temp_params = ht_params.temp_value+ht_params.buffer_value
 		print(humidity_positive, humidity_nagitive, temp_params)
-		if humidity >= float(humidity_positive) or temperature >= float(temp_params):
+		if humidity >= float(humidity_positive):
+			scheduler.print_jobs()
+			try:
+				e = Exhaust.objects.get(pk=2)
+				e.job_id='exhaust_job_id'
+				e.status=True
+				e.save()
+				print(scheduler.get_job('exhaust_job_id'))
+				scheduler.resume_job('exhaust_job_id')
+				# time.sleep(5)
+				return
+			except Exception as e:
+				e = Exhaust(pk=2, job_id='exhaust_job_id', status=True)
+				e.save()
+				# time.sleep(5)
+
+		elif fahrenheit >= float(temp_params):
 			scheduler.print_jobs()
 			try:
 				e = Exhaust.objects.get(pk=2)
@@ -154,6 +171,7 @@ def check_hum_temp():
 				e = Exhaust(pk=2, job_id='exhaust_job_id', status=False)
 				e.save()
 				# time.sleep(5)
+
 		if humidity <= humidity_nagitive:
 			scheduler.print_jobs()
 			try:
