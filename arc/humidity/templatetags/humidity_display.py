@@ -14,7 +14,7 @@ def show_temp_humidity():
 def humidity_tag():
 	# current_humidity, current_temp = get_humidity_temperature()
 	form = HumidityTempForm()
-	data = HumidityTemp.objects.all().order_by('-created_at')[:6]
+	data = HumidityTemp.objects.all().order_by('-created_at')[:100]
 	try:
 		current_values = HumidityTempValues.objects.get(pk=1)
 	except Exception as e:

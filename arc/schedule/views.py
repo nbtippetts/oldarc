@@ -2,8 +2,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import connection
 from datetime import datetime, timedelta, time, date
-from .models import Schedule, ScheduleLog
-from .forms import ScheduleForm
+from .models import Schedule, ScheduleLog, RelayStatus
+from .forms import ScheduleForm, RelayStatusForm
 import time
 import gpiozero
 import json
@@ -26,7 +26,7 @@ executors = {
 }
 job_defaults = {
   'coalesce': False,
-  'max_instances': 4
+  'max_instances': 25
 }
 scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=utc)
 
@@ -83,8 +83,8 @@ def update_schedule(request):
 				'form': form,
 				'waters': latest
 			}
-			# return redirect('/', context)
-			return render(request, 'schedule.html',context)
+			return redirect('/schedule', context)
+			# return render(request, 'schedule.html',context)
 	# If this is a GET (or any other method) create the default form.
 	else:
 		form = ScheduleForm(initial={
@@ -152,4 +152,38 @@ def schedule_relay_15(*args):
 			schedule_log.deration = convert_to_time
 			schedule_log.save()
 		time.sleep(1)
+
+def relay_on_off_14(request):
+	if request.method == 'POST':
+		form = RelayStatusForm(request.POST)
+		if form.is_valid():
+			status=form.cleaned_data['status']
+			gpio_pin=14
+			relay = RelayStatus()
+			relay.status=status
+			relay.gpio_pin=gpio_pin
+			relay.save()
+			form = RelayStatusForm(initial={
+				'status': status,
+			})
+			return render(request, 'schedule.html',form)
+	else:
+		relay_state = RelayStatus.objects.filter(gpio_pin=14).first()
+		if not relay_state:
+			form = RelayStatusForm(initial={
+				'status': False,
+			})
+		else:
+			form = RelayStatusForm(initial={
+				'status': relay_state.status,
+			})
+		return render(request, 'schedule.html',form)
+
+# def relay_on_off_15(request):
+# 	if request.method == 'POST':
+# 		form = RelayStatus(request.POST)
+# 		if form.is_valid():
+# 			status=form.cleaned_data['status']
+
+# 	return
 scheduler.start()

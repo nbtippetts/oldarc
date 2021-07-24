@@ -1,7 +1,7 @@
 from django import template
 register = template.Library()
-from ..models import Schedule, ScheduleLog
-from ..forms import ScheduleForm
+from ..models import Schedule, ScheduleLog, RelayStatus
+from ..forms import ScheduleForm, RelayStatusForm
 from datetime import datetime
 import RPi.GPIO as GPIO
 
@@ -49,6 +49,26 @@ def schedule_form():
 		'start': datetime.now(),
 	})
 	return {'form': form}
+
+@register.inclusion_tag('relay_14.html')
+def gpio_14_state():
+	relay_state = RelayStatus.objects.filter(gpio_pin=14).first()
+	if not relay_state:
+		form = RelayStatusForm(initial={
+			'status': False,
+		})
+		return {'form': form}
+	else:
+		form = RelayStatusForm(initial={
+			'status': relay_state.status,
+		})
+		return {'form': form}
+
+
+# @register.inclusion_tag('relay_15.html')
+# def gpio_15_state():
+# 	form = RelayStatus()
+# 	return {'form': form}
 
 @register.inclusion_tag('gpio_14.html')
 def gpio_14_state_function():

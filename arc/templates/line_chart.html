@@ -21,22 +21,32 @@
 			datasets: [{
 				label: 'Humidity %',
 				data: [{% for hum in data %} "{{ hum.humidity }}", {% endfor %}],
-				backgroundColor: humid_colors
+				pointBackgroundColor: 'rgb(255, 99, 132)',
+				fill: false,
+				backgroundColor: 'grey'
 			}, {
-				label: 'Temp *C',
+				label: 'Temp *F',
 				data: [{% for t in data %} "{{ t.temp }}", {% endfor %}],
-				backgroundColor: temp_colors
+				pointBackgroundColor: 'rgb(54, 162, 235)',
+				fill: false,
+				backgroundColor: 'grey'
 			}]
 		},
 		options: {
 			scales: {
 				yAxes: [{
 					ticks: {
-						max: 60,
+						max: 120,
 						min: 0,
 						stepSize: 10
 					}
-				}]
+				}],
+				xAxes: [{
+                	ticks: {
+						reverse: true,
+                    	display: false //this will remove only the label
+                	}
+            	}]
 			}
 		}
 	});
