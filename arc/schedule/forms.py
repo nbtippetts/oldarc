@@ -3,7 +3,6 @@ from django import forms
 from .models import Schedule,RelayStatus
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from .custom_form_widgets import SelectTimeWidget
 
 on_off_gpio = (
 	(True, 'Start'),
@@ -59,8 +58,6 @@ class ScheduleForm(forms.Form):
 	)
 	deration = forms.ChoiceField(choices=select_duration)
 	how_often = forms.ChoiceField(choices=select_how_often)
-	# deration = forms.TimeField(widget=SelectTimeWidget(twelve_hr=True))
-	# how_often = forms.TimeField(widget=SelectTimeWidget(twelve_hr=True))
 	gpio_pin = forms.ChoiceField(
 		choices=select_gpio_pin
 	)
