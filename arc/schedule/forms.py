@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta, time
 from django import forms
 from .models import Schedule,RelayStatus
-from simpleduration import Duration
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
