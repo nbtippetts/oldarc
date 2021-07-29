@@ -31,11 +31,7 @@ importlib-metadata==1.7.0
 imutils==0.5.3
 kombu==4.6.11
 multidict==5.1.0
-numpy==1.19.2
-opencv-contrib-python
-pkg-resources==0.0.0
 prompt-toolkit==3.0.13
-psycopg2==2.8.6
 pyftdi==0.51.2
 pyserial==3.4
 python-crontab==2.5.1
