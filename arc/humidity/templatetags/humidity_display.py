@@ -1,8 +1,10 @@
 from django import template
 register = template.Library()
-from ..models import HumidityTemp, HumidityTempValues
-from ..forms import HumidityTempForm
+from ..models import HumidityTemp, HumidityTempValues, Exhaust
+from ..forms import HumidityTempForm, ExhaustForm
 from ..hum_temp import get_humidity_temperature
+from schedule.models import RelayStatus
+from schedule.forms import RelayStatusForm
 from datetime import datetime
 
 @register.inclusion_tag('humidity_temp.html')
@@ -25,14 +27,9 @@ def humidity_tag():
 		h.save()
 		current_values = HumidityTempValues.objects.get(pk=1)
 		pass
-	# charts_list = []
-	# for d in log_data:
-	# 	charts_list.append(d.created_at.strftime("%Y-%m-%d %H:%M:%S"))
 	return {
 		'data': data,
 		'form':form,
-		# 'current_humidity':current_humidity,
-		# 'current_temp':current_temp,
 		'humidity_value':current_values.humidity_value,
 		'temp_value':current_values.temp_value,}
 
@@ -45,3 +42,79 @@ def log_data():
 @register.inclusion_tag('set_humidity_temp.html')
 def humidity_temp_form():
 	return humidity_tag()
+
+@register.inclusion_tag('relay_14.html')
+def gpio_14_state():
+	relay_state = RelayStatus.objects.get(pk=1)
+	form = RelayStatusForm(initial={
+		'status': relay_state.button_status,
+	})
+	return {'button_form': form}
+
+@register.inclusion_tag('relay_15.html')
+def gpio_15_state():
+	relay_state = RelayStatus.objects.get(pk=2)
+	form = RelayStatusForm(initial={
+		'status': relay_state.button_status,
+	})
+	return {'button_form': form}
+
+@register.inclusion_tag('relay_17.html')
+def gpio_17_state():
+	relay_state = Exhaust.objects.get(pk=1)
+	form = ExhaustForm(initial={
+		'status': relay_state.status,
+	})
+	return {'button_form': form}
+
+@register.inclusion_tag('relay_18.html')
+def gpio_18_state():
+	relay_state = Exhaust.objects.get(pk=2)
+	form = ExhaustForm(initial={
+		'status': relay_state.status,
+	})
+	return {'button_form': form}
+
+@register.inclusion_tag('gpio_14.html')
+def gpio_14_state_function():
+	relay_state = RelayStatus.objects.get(pk=1)
+	schedule_status = relay_state.schedule_status
+	button_status = relay_state.button_status
+	pin_state = 0
+	if button_status == 'True' or schedule_status == 'True':
+		pin_state = 1
+	else:
+		pin_state = 0
+	return {'gpio_14_state':pin_state}
+
+@register.inclusion_tag('gpio_15.html')
+def gpio_15_state_function():
+	relay_state = RelayStatus.objects.get(pk=2)
+	schedule_status = relay_state.schedule_status
+	button_status = relay_state.button_status
+	pin_state = 0
+	if button_status == 'True' or schedule_status == 'True':
+		pin_state = 1
+	else:
+		pin_state = 0
+	return {'gpio_15_state':pin_state}
+
+@register.inclusion_tag('gpio_17.html')
+def gpio_17_state_function():
+	relay_state = Exhaust.objects.get(pk=1)
+	pin_state = 0
+	if relay_state.status == 'True':
+		pin_state = 1
+	else:
+		pin_state = 0
+	return {'gpio_17_state':pin_state}
+
+@register.inclusion_tag('gpio_18.html')
+def gpio_18_state_function():
+	relay_state = Exhaust.objects.get(pk=2)
+	pin_state = 0
+	if relay_state.status == 'True':
+		pin_state = 1
+	else:
+		pin_state = 0
+	return {'gpio_18_state':pin_state}

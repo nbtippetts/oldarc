@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, time
 from django import forms
 from .models import Schedule,RelayStatus
+from simpleduration import Duration
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
@@ -56,22 +57,40 @@ class ScheduleForm(forms.Form):
 	start = forms.TimeField(
 		widget=TimeInput
 	)
-	deration = forms.ChoiceField(choices=select_duration)
-	how_often = forms.ChoiceField(choices=select_how_often)
+	duration_hours = forms.CharField(label='Duration',widget=forms.TextInput(attrs={'placeholder': 'Hours'}))
+	duration_minutes = forms.CharField(label='',widget=forms.TextInput(attrs={'placeholder': 'Minutes'}))
+	duration_seconds = forms.CharField(label='',widget=forms.TextInput(attrs={'placeholder': 'Seconds'}))
+	how_often = forms.DurationField(widget=forms.TextInput(attrs={'placeholder': '24 Hour Format 00:00:00'}))
 	gpio_pin = forms.ChoiceField(
 		choices=select_gpio_pin
 	)
+	def clean(self):
+		cleaned_data = super().clean()
+		duration_hours = self.cleaned_data['duration_hours']
+		duration_minutes = self.cleaned_data['duration_minutes']
+		duration_seconds = self.cleaned_data['duration_seconds']
+		self.cleaned_data['duration']=Duration(f'{duration_hours} hours {duration_minutes} minutes {duration_seconds} seconds')
+		self.cleaned_data['duration']=self.cleaned_data['duration'].timedelta()
+		how_often = self.cleaned_data['how_often']
+		if self.cleaned_data['duration'].seconds >= how_often.seconds:
+			# messages.error(request,"Duration must be less then how often")
+			raise forms.ValidationError("Duration must be less then how often")
+		# return self.cleaned_data
 	class Meta:
 		model = Schedule
 
 
 
 class RelayStatusForm(forms.Form):
-	status = forms.ChoiceField(
-		choices=on_off_gpio
-	)
-	gpio_pin = forms.ChoiceField(
-		choices=select_gpio_pin
-	)
+	# status = forms.ChoiceField(
+	# 	label=False,
+	# 	choices=on_off_gpio,
+	# 	widget=forms.RadioSelect
+	# )
 	class Meta:
 		model = RelayStatus
+		fields = ('ON','OFF')
+		widgets = {
+			'ON': forms.TextInput(attrs={'class': 'form-control'}),
+			'OFF': forms.TextInput(attrs={'class': 'form-control'})
+		}

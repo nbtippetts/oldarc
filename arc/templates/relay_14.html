@@ -5,9 +5,11 @@
 {{ form.media }}
 {% load crispy_forms_tags %}
 
-<form action="{% url 'relay_on_off_14' %}" method="POST">
+<form action="{% url 'relay_on_off' %}" method="POST" style="padding-top: 5px;">
 	{% csrf_token %}
-	{% bootstrap_form form %}
-	<!-- <input id="key" type="text" name="pump_status"> -->
-	<input type="submit" value="Submit">
+	<input type="hidden" name="14" value="14">
+	<div class="btn-group" role="group" aria-label="Basic example">
+		<button type="submit" class="btn btn-outline-dark btn-sm" name="status" value="True">ON </button>
+		<button type="submit" class="btn btn-outline-dark btn-sm" name="status" value="False">OFF</button>
+	</div>
 </form>

@@ -5,9 +5,9 @@
 {{ form.media }}
 {% load crispy_forms_tags %}
 
-<form action="{% url 'relay_on_off' %}" method="POST" style="padding-top: 5px;">
+<form action="{% url 'relay_on_off_17_18' %}" method="POST" style="padding-top: 5px;">
 	{% csrf_token %}
-	<input type="hidden" name="15" value="15">
+	<input type="hidden" name="17" value="17">
 	<div class="btn-group" role="group" aria-label="Basic example">
 		<button type="submit" class="btn btn-outline-dark btn-sm" name="status" value="True">ON </button>
 		<button type="submit" class="btn btn-outline-dark btn-sm" name="status" value="False">OFF</button>

@@ -5,14 +5,75 @@
 <div id="content-wrapper" class="d-flex flex-column">
 <div class="content">
 	<div class="container-fluid">
-<div class="row justify-content-center">
+<div class="row justify-content-center" style="padding-top: 15px; padding-bottom: 20px;">
+	<div class="col">
+		<div class="card shadow mb-4">
+			<!-- Card Header - Dropdown -->
+			<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+				<h6 class="m-0 font-weight-bold" style="color: #343d46;">Lighting</h6>
 
+			</div>
+			<!-- Card Body -->
+			<div class="card-body">
+				
+				{% gpio_14_state_function %}
+				{% gpio_14_state %}
+			</div>
+		</div>
+	</div>
+	<div class="col">
+		<div class="card shadow mb-4">
+			<!-- Card Header - Dropdown -->
+			<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+				<h6 class="m-0 font-weight-bold" style="color: #343d46;">Watering</h6>
+	
+			</div>
+			<!-- Card Body -->
+			<div class="card-body">
+				
+				{% gpio_15_state_function %}
+				{% gpio_15_state %}
+			</div>
+			<!-- Card Body -->
+		</div>
+	</div>
+	<div class="col">
+		<div class="card shadow mb-4">
+			<!-- Card Header - Dropdown -->
+			<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+				<h6 class="m-0 font-weight-bold" style="color: #343d46;">Humidity</h6>
+
+			</div>
+			<!-- Card Body -->
+			<div class="card-body">
+				
+				{% gpio_17_state_function %}
+				{% gpio_17_state %}
+			</div>
+		</div>
+	</div>
+	<div class="col">
+		<div class="card shadow mb-4">
+			<!-- Card Header - Dropdown -->
+			<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+				<h6 class="m-0 font-weight-bold" style="color: #343d46;">Exhaust</h6>
+	
+			</div>
+			<!-- Card Body -->
+			<div class="card-body">
+				
+				{% gpio_18_state_function %}
+				{% gpio_18_state %}
+			</div>
+			<!-- Card Body -->
+		</div>
+	</div>
 	<!-- Area Chart -->
 	<div class="col-xl-11 col-lg-7 mb-4">
 		<div id="chart_tit" class="card shadow mb-4">
 			<!-- Card Header - Dropdown -->
 			<div class="card-header py-3 d-flex flex-row align-items-center justify-content-around">
-				<h6 class="m-0 font-weight-bold text-primary">Temperature/Humidity Overview</h6>
+				<h6 class="m-0 font-weight-bold" style="color: #343d46;">Temperature/Humidity Overview</h6>
 			</div>
 			<div class="h5 mb-0 font-weight-bold text-gray-800">{% show_temp_humidity %}</div>
 			<!-- Card Body -->
@@ -24,12 +85,12 @@
 	</div>
 	</div>
 	<div class="row justify-content-center">
-		<div class="col-xl-11 col-lg-5 mb-4">
+		<div class="col-xl-11 col-lg-11 mb-11">
 			<div class="card shadow mb-4">
 				<!-- Card Header - Dropdown -->
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
 					style="padding-bottom: 0px;">
-					<h6 class="m-0 font-weight-bold text-primary">Humidity / Temperature Logs</h6>
+					<h6 class="m-0 font-weight-bold" style="color: #343d46;">Humidity And Temperature Logs</h6>
 				</div>
 				<!-- Card Body -->
 				<div class="card-body">
