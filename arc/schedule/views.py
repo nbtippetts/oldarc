@@ -172,6 +172,15 @@ def relay_14(stats):
 		relay = gpiozero.OutputDevice(14, active_high=False, initial_value=False)
 		while True:
 			try:
+				try:
+					relay_status = RelayStatus.objects.get(pk=1)
+				except Exception as e:
+					relay_status = RelayStatus()
+					relay_status.pk=1
+					relay_status.button_status=False
+					relay_status.gpio_pin=14
+					relay_status.schedule_status=False
+					relay_status.save()
 				relay_status = RelayStatus.objects.get(pk=1)
 				if relay_status.button_status == 'True' and relay_status.schedule_status == 'False':
 					try:
@@ -198,6 +207,15 @@ def relay_15(stats):
 		relay = gpiozero.OutputDevice(15, active_high=False, initial_value=False)
 		while True:
 			try:
+				try:
+					relay_status = RelayStatus.objects.get(pk=2)
+				except Exception as e:
+					relay_status = RelayStatus()
+					relay_status.pk=2
+					relay_status.button_status=False
+					relay_status.gpio_pin=15
+					relay_status.schedule_status=False
+					relay_status.save()
 				relay_status = RelayStatus.objects.get(pk=2)
 				if relay_status.button_status == 'True' and relay_status.schedule_status == 'False':
 					try:
@@ -219,6 +237,6 @@ def relay_15(stats):
 		print(e)
 		pass
 
-scheduler.add_job(relay_14,'interval',seconds=9,args=[False],id='button_relay_job_id_14', max_instances=1, replace_existing=True)
+scheduler.add_job(relay_14,'interval',seconds=8,args=[False],id='button_relay_job_id_14', max_instances=1, replace_existing=True)
 scheduler.add_job(relay_15,'interval',seconds=9,args=[False],id='button_relay_job_id_15', max_instances=1, replace_existing=True)
 scheduler.start()

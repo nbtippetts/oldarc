@@ -84,6 +84,15 @@ def exhaust_relay_job():
 	try:
 		while True:
 			try:
+				try:
+					e = Exhaust.objects.get(pk=2)
+				except Exception as ex:
+					e = Exhaust()
+					e.pk=2
+					e.job_id='exhaust_job_id'
+					e.gpio_pin=18
+					e.status=False
+					e.save()
 				e = Exhaust.objects.get(pk=2)
 				if e.status == 'True':
 					try:
@@ -108,6 +117,15 @@ def humidifer_relay_job():
 	try:
 		while True:
 			try:
+				try:
+					e = Exhaust.objects.get(pk=1)
+				except Exception as ex:
+					e = Exhaust()
+					e.pk=1
+					e.job_id='exhaust_job_id'
+					e.gpio_pin=17
+					e.status=False
+					e.save()
 				e = Exhaust.objects.get(pk=1)
 				if e.status == 'True':
 					try:
@@ -138,6 +156,15 @@ def check_hum_temp():
 		fahrenheit = (temperature * 9/5) + 32
 		new_temperature = "{0:0.1f}*F".format(fahrenheit)
 		print(new_humidity, new_temperature)
+		try:
+			ht_params = HumidityTempValues.objects.get(pk=1)
+		except Exception as e:
+			ht_params = HumidityTempValues()
+			ht_params.pk=1
+			ht_params.humidity_value=0.00
+			ht_params.buffer_value=0.00
+			ht_params.temp_value=0.00
+			ht_params.save()
 		ht_params = HumidityTempValues.objects.get(pk=1)
 		print(ht_params.humidity_value,ht_params.buffer_value, ht_params.temp_value)
 		humidity_positive = ht_params.humidity_value+ht_params.buffer_value
