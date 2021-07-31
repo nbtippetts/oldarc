@@ -5,11 +5,21 @@
 {{ form.media }}
 {% load crispy_forms_tags %}
 
-<form action="{% url 'relay_on_off_17_18' %}" method="POST" style="padding-top: 5px;">
+<form action="{% url 'relay_on_off_17_18' %}" method="POST" style="padding-top: 5px; width: 100%;">
 	{% csrf_token %}
 	<input type="hidden" name="18" value="18">
-	<div class="btn-group" role="group" aria-label="Basic example">
+	<div class="btn-group btn-group-lg btn-block" role="group" aria-label="Basic example">
 		<button type="submit" class="btn btn-outline-dark btn-sm" name="status" value="True">ON </button>
 		<button type="submit" class="btn btn-outline-dark btn-sm" name="status" value="False">OFF</button>
+	</div>
+	<br>
+	{% if gpio_18_auto_state == 1 %}
+		<span class="badge badge-pill" style="background-color: #008744; color: white;">ON</span>
+	{% else %}
+		<span class="badge badge-pill" style="background-color: #d62d20; color: white;">OFF</span>
+	{% endif %}
+	<div class="btn-group btn-group-lg btn-block" role="group" aria-label="Basic example">
+		<button type="submit" class="btn btn-outline-dark btn-sm" name="auto_status" value="True">Automation ON </button>
+		<button type="submit" class="btn btn-outline-dark btn-sm" name="auto_status" value="False">Automation OFF</button>
 	</div>
 </form>

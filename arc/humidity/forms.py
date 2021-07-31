@@ -24,8 +24,10 @@ class ExhaustForm(forms.Form):
 	# )
 	class Meta:
 		model = Exhaust
-		fields = ('ON','OFF')
+		fields = ('ON','OFF', 'auto_on', 'auto_off')
 		widgets = {
 			'ON': forms.TextInput(attrs={'class': 'form-control'}),
-			'OFF': forms.TextInput(attrs={'class': 'form-control'})
+			'OFF': forms.TextInput(attrs={'class': 'form-control'}),
+			'auto_on': forms.TextInput(attrs={'class': 'form-control'}),
+			'auto_off': forms.TextInput(attrs={'class': 'form-control'})
 		}

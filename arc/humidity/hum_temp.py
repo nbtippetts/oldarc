@@ -12,11 +12,11 @@ from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 
 
 jobstores = {
-  'humidity_store': SQLAlchemyJobStore(url='postgresql+psycopg2://pi:rnautomations@db:5432/arc_db')
-#   'humidity_store': SQLAlchemyJobStore(url='postgresql+psycopg2://pi:rnautomations@localhost:5432/arc_db')
+  'default': SQLAlchemyJobStore(url='postgresql+psycopg2://pi:rnautomations@db:5432/arc_db')
+#   'default': SQLAlchemyJobStore(url='postgresql+psycopg2://pi:rnautomations@localhost:5432/arc_db')
 }
 executors = {
-  'humidity_store': ThreadPoolExecutor(10),
+  'default': ThreadPoolExecutor(10),
   'processpool': ProcessPoolExecutor(5)
 }
 job_defaults = {
@@ -25,21 +25,19 @@ job_defaults = {
 }
 scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=utc)
 
-def stop_relay_17(gpio_pin):
-	scheduler.pause_job('humidifer_job_id')
+def stop_auto_relay_18(gpio_pin):
+	scheduler.pause_job('humidity_temp_job_id')
 	scheduler.print_jobs()
 	return
-def start_relay_17(gpio_pin):
-	scheduler.resume_job('humidifer_job_id')
+def start_auto_relay_18(gpio_pin):
+	scheduler.resume_job('humidity_temp_job_id')
 	scheduler.print_jobs()
 	return
 def stop_relay_18(gpio_pin):
-	scheduler.pause_job('humidity_temp_job_id')
 	scheduler.pause_job('exhaust_job_id')
 	scheduler.print_jobs()
 	return
 def start_relay_18(gpio_pin):
-	scheduler.resume_job('humidity_temp_job_id')
 	scheduler.resume_job('exhaust_job_id')
 	scheduler.print_jobs()
 	return
@@ -205,6 +203,33 @@ def check_hum_temp():
 				e = Exhaust(pk=2, job_id='exhaust_job_id', status=False)
 				e.save()
 
+	else:
+		print('Failed to retrieve data from humidity sensor.')
+
+def check_hum():
+	sensor = Adafruit_DHT.DHT22
+	pin =4
+	humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
+	if humidity is not None and temperature is not None:
+		new_humidity = "{0:0.1f}%".format(humidity)
+		fahrenheit = (temperature * 9/5) + 32
+		new_temperature = "{0:0.1f}*F".format(fahrenheit)
+		print(new_humidity, new_temperature)
+		try:
+			ht_params = HumidityTempValues.objects.get(pk=1)
+		except Exception as e:
+			ht_params = HumidityTempValues()
+			ht_params.pk=1
+			ht_params.humidity_value=0.00
+			ht_params.buffer_value=0.00
+			ht_params.temp_value=0.00
+			ht_params.save()
+		ht_params = HumidityTempValues.objects.get(pk=1)
+		print(ht_params.humidity_value,ht_params.buffer_value, ht_params.temp_value)
+		humidity_positive = ht_params.humidity_value+ht_params.buffer_value
+		humidity_nagitive = ht_params.humidity_value-ht_params.buffer_value
+		temp_params = ht_params.temp_value+ht_params.buffer_value
+		print(humidity_positive, humidity_nagitive, temp_params)
 		if humidity <= humidity_nagitive:
 			try:
 				e = Exhaust.objects.get(pk=1)
@@ -233,6 +258,7 @@ def check_hum_temp():
 
 
 scheduler.add_job(check_hum_temp, 'interval', seconds=5, id='humidity_temp_job_id', max_instances=2, replace_existing=True)
+scheduler.add_job(check_hum, 'interval', seconds=5, id='check_humidity_job_id', max_instances=1, replace_existing=True)
 scheduler.add_job(exhaust_relay_job, 'interval', seconds=9, id='exhaust_job_id', max_instances=1, replace_existing=True)
 scheduler.add_job(humidifer_relay_job, 'interval', seconds=9, id='humidifer_job_id', max_instances=1, replace_existing=True)
 scheduler.add_job(humidity_temperature_logs, 'interval', seconds=300, id='humidity_temperature_logs_job_id', max_instances=1, replace_existing=True)

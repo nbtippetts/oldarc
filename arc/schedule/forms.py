@@ -69,13 +69,17 @@ class ScheduleForm(forms.Form):
 		duration_hours = self.cleaned_data['duration_hours']
 		duration_minutes = self.cleaned_data['duration_minutes']
 		duration_seconds = self.cleaned_data['duration_seconds']
-		self.cleaned_data['duration']=Duration(f'{duration_hours} hours {duration_minutes} minutes {duration_seconds} seconds')
+		self.cleaned_data['duration']=Duration(f"{duration_hours} hour {duration_minutes} minute {duration_seconds} second")
+		# self.cleaned_data['duration']=Duration(f"hour {duration_hours}")
+		# self.cleaned_data['duration']=Duration(f"hour {duration_hours} minute {duration_minutes} second {duration_seconds}")
 		self.cleaned_data['duration']=self.cleaned_data['duration'].timedelta()
 		how_often = self.cleaned_data['how_often']
-		if self.cleaned_data['duration'].seconds >= how_often.seconds:
-			# messages.error(request,"Duration must be less then how often")
+		if how_often.seconds == 0:
+			print('24 Hours')
+		elif self.cleaned_data['duration'].seconds >= how_often.seconds:
 			raise forms.ValidationError("Duration must be less then how often")
-		# return self.cleaned_data
+		else:
+			print('something else went wrong')
 	class Meta:
 		model = Schedule
 

@@ -65,7 +65,12 @@ def gpio_18_state():
 	form = ExhaustForm(initial={
 		'status': relay_state.status,
 	})
-	return {'button_form': form}
+	pin_state = 0
+	if relay_state.automation_status == 'True':
+		auto_pin_state = 1
+	else:
+		auto_pin_state = 0
+	return {'button_form': form, 'gpio_18_auto_state':auto_pin_state}
 
 @register.inclusion_tag('gpio_14.html')
 def gpio_14_state_function():

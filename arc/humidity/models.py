@@ -19,4 +19,5 @@ class HumidityTempValues(models.Model):
 class Exhaust(models.Model):
 	job_id = models.TextField(default='')
 	status = models.TextField(default='')
+	automation_status = models.TextField(default='')
 	created_at = models.DateTimeField(default=timezone.now)

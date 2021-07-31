@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import HumidityTemp, HumidityTempValues, Exhaust
 from .forms import HumidityTempForm, ExhaustForm
-from .hum_temp import get_humidity_temperature,stop_relay_17,start_relay_17,stop_relay_18,start_relay_18
+from .hum_temp import get_humidity_temperature,stop_relay_18,start_relay_18, stop_auto_relay_18, start_auto_relay_18
 import datetime
 
 def humidity(request):
@@ -34,6 +34,7 @@ def relay_on_off_17_18(request):
 		form = ExhaustForm(request.POST)
 		if form.is_valid():
 			status=request.POST.get('status')
+			auto_status=request.POST.get('auto_status')
 			gpio_pin=0
 			if request.POST.get('17'):
 				pk=1
@@ -41,17 +42,28 @@ def relay_on_off_17_18(request):
 			elif request.POST.get('18'):
 				pk=2
 				gpio_pin=18
+				if status == 'False':
+					stop_relay_18(gpio_pin)
+				elif status == 'True':
+					start_relay_18(gpio_pin)
+				if auto_status == 'False':
+					stop_auto_relay_18(gpio_pin)
+				elif auto_status == 'True':
+					start_auto_relay_18(gpio_pin)
 			else:
 				print('No GPIO Pin in args')
 
-			relay_status = Exhaust.objects.get(pk=pk)
-			relay_status.gpio_pin=gpio_pin
-			relay_status.status=status
-			relay_status.save()
-			if status == 'False':
-				stop_relay_18(gpio_pin)
+			if status is None:
+				relay_status = Exhaust.objects.get(pk=pk)
+				relay_status.gpio_pin=gpio_pin
+				relay_status.automation_status=auto_status
+				relay_status.save()
 			else:
-				start_relay_18(gpio_pin)
+				relay_status = Exhaust.objects.get(pk=pk)
+				relay_status.gpio_pin=gpio_pin
+				relay_status.status=status
+				relay_status.save()
+
 			form = Exhaust()
 			context = {
 				'form': form
