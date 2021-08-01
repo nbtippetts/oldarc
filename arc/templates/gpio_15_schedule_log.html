@@ -11,7 +11,7 @@
             {% for d in latest_schedule %}
             <tr>
                 <td style="font-size: 14px;">{{ d.start }}</td>
-                <td style="font-size: 14px;">{{ d.duration|time:"H:i:s" }}</td>
+                <td style="font-size: 14px;">{{ d.duration }}</td>
                 <td style="font-size: 14px;">{{ d.finish_date }}</td>
             </tr>
             {% empty %}

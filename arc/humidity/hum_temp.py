@@ -4,9 +4,8 @@ import time
 from datetime import datetime, timedelta
 from .models import HumidityTemp, HumidityTempValues, Exhaust
 from pytz import utc
-
+import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
-
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 
@@ -20,7 +19,7 @@ executors = {
   'processpool': ProcessPoolExecutor(5)
 }
 job_defaults = {
-  'coalesce': False,
+  'coalesce': True,
   'max_instances': 25
 }
 scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=utc)
@@ -172,11 +171,18 @@ def check_hum_temp():
 		if humidity >= float(humidity_positive):
 			try:
 				e = Exhaust.objects.get(pk=2)
-				e.job_id='exhaust_job_id'
-				e.status=True
-				e.save()
-				scheduler.resume_job('exhaust_job_id')
-				return
+				if e.auto_status == 'True':
+					e.job_id='exhaust_job_id'
+					e.status=True
+					e.save()
+					scheduler.resume_job('exhaust_job_id')
+					return
+				else:
+					e.job_id='exhaust_job_id'
+					e.status=False
+					e.save()
+					scheduler.pause_job('exhaust_job_id')
+					return
 			except Exception as e:
 				e = Exhaust(pk=2, job_id='exhaust_job_id', status=True)
 				e.save()
@@ -258,9 +264,13 @@ def check_hum():
 
 
 scheduler.add_job(check_hum_temp, 'interval', seconds=5, id='humidity_temp_job_id', max_instances=2, replace_existing=True)
-scheduler.add_job(check_hum, 'interval', seconds=5, id='check_humidity_job_id', max_instances=1, replace_existing=True)
+scheduler.add_job(check_hum, 'interval', seconds=5, id='check_humidity_job_id', max_instances=2, replace_existing=True)
 scheduler.add_job(exhaust_relay_job, 'interval', seconds=9, id='exhaust_job_id', max_instances=1, replace_existing=True)
 scheduler.add_job(humidifer_relay_job, 'interval', seconds=9, id='humidifer_job_id', max_instances=1, replace_existing=True)
 scheduler.add_job(humidity_temperature_logs, 'interval', seconds=300, id='humidity_temperature_logs_job_id', max_instances=1, replace_existing=True)
 scheduler.start()
 
+# @atexit.register
+# def goodbye_humidity():
+# 	print('shut down scheduler')
+# 	scheduler.shutdown()

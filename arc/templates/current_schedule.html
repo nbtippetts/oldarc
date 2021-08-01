@@ -1,0 +1,11 @@
+{% block content %}
+    {% for param in schedule_param %}
+    {% if param.gpio_pin == 14 %}
+        <h6 class="card-subtitle mb-2 text-muted">Current Lighting Schedule {{ param.schedule_interval }} {{ param.duration }}</h6>
+    {% else %}
+        <h6 class="card-subtitle mb-2 text-muted">Current Watering Schedule {{ param.schedule_interval }} {{ param.duration }}</h6>
+    {% endif %}
+    {% empty %}
+        <h6 class="card-subtitle mb-2 text-muted">{{ param.schedule_interval }}</h6>
+    {% endfor %}
+{% endblock content %}

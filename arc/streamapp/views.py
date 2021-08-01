@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import StreamingHttpResponse
-from streamapp.camera import VideoCamera
+# from streamapp.camera import VideoCamera
 
 def index(request):
 	return render(request, 'video_view.html')
@@ -14,4 +14,7 @@ def gen(camera):
 
 
 def video_feed(request):
-	return StreamingHttpResponse(gen(VideoCamera()),content_type='multipart/x-mixed-replace; boundary=frame')
+	try:
+		return #StreamingHttpResponse(gen(VideoCamera()),content_type='multipart/x-mixed-replace; boundary=frame')
+	except HttpResponseServerError as e:
+		print("aborted")

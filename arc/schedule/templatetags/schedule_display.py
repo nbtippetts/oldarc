@@ -20,6 +20,30 @@ def show_gpio_14_schedule_log():
 		}
 		return {'latest_schedule': no_data}
 
+@register.inclusion_tag('current_schedule.html')
+def current_schedule():
+	schedule_param = Schedule.objects.all()
+	if schedule_param.exists():
+		return {'schedule_param': schedule_param}
+	else:
+		schedule_param = {
+			'schedule_interval': 'No schedule has been set.',
+		}
+		return {'schedule_param': schedule_param}
+
+@register.inclusion_tag('gpio_15_current_schedule.html')
+def gpio_15_current_schedule():
+	latest_schedule = Schedule.objects.get(pk=2).order_by('-id')[:10]
+	if latest_schedule.exists():
+		return {'latest_schedule': latest_schedule}
+	else:
+		no_data = {
+			'start': '00:00:00',
+			'duration': '00:00:00',
+			'finish_date': '00:00:00'
+		}
+		return {'latest_schedule': no_data}
+
 
 @register.inclusion_tag('gpio_15_schedule_log.html')
 def show_gpio_15_schedule_log():
