@@ -33,6 +33,22 @@ def humidity_tag():
 		'humidity_value':current_values.humidity_value,
 		'temp_value':current_values.temp_value,}
 
+@register.inclusion_tag('current_hum_temp.html')
+def current_hum_temp():
+	try:
+		current_values = HumidityTempValues.objects.get(pk=1)
+	except Exception as e:
+		h = HumidityTempValues(
+			humidity_value=0.0,
+			temp_value=0.0
+		)
+		h.save()
+		current_values = HumidityTempValues.objects.get(pk=1)
+		pass
+	return {
+		'humidity_value':current_values.humidity_value,
+		'temp_value':current_values.temp_value,}
+
 @register.inclusion_tag('log_data.html')
 def log_data():	
 	log_data = HumidityTemp.objects.all().order_by('-created_at')[:25]

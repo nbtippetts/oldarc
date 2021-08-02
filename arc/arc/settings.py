@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'bootstrap4',
     'django_forms_bootstrap',
     'bootstrap_datepicker_plus',
-    'chartjs'
+    'chartjs',
+    'jquery'
 ]
 
 MIDDLEWARE = [
@@ -64,7 +65,7 @@ ROOT_URLCONF = 'arc.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -145,7 +146,10 @@ USE_TZ = True
 
 STATIC_URL='/static/'
 # as declared in NginX conf, it must match /opt/services/djangoapp/static/
-STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'static')
+STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'ARC/static')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 # do the same for media files, it must match /opt/services/djangoapp/media/
 MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'media')

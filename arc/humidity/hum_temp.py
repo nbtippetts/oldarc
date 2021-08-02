@@ -267,7 +267,7 @@ scheduler.add_job(check_hum_temp, 'interval', seconds=5, id='humidity_temp_job_i
 scheduler.add_job(check_hum, 'interval', seconds=5, id='check_humidity_job_id', max_instances=2, replace_existing=True)
 scheduler.add_job(exhaust_relay_job, 'interval', seconds=9, id='exhaust_job_id', max_instances=1, replace_existing=True)
 scheduler.add_job(humidifer_relay_job, 'interval', seconds=9, id='humidifer_job_id', max_instances=1, replace_existing=True)
-scheduler.add_job(humidity_temperature_logs, 'interval', seconds=300, id='humidity_temperature_logs_job_id', max_instances=1, replace_existing=True)
+scheduler.add_job(humidity_temperature_logs, 'interval', seconds=900, id='humidity_temperature_logs_job_id', max_instances=1, replace_existing=True)
 scheduler.start()
 
 # @atexit.register

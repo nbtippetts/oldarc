@@ -62,6 +62,9 @@
 			</div>
 			<div class="h5 mb-0 font-weight-bold text-gray-800">{% show_temp_humidity %}</div>
 			<!-- Card Body -->
+			<div class="card-body">
+				{% current_hum_temp %}
+			</div>
 			<div id="chart_content" class="card-body" style="padding-top: 0px;">
 				{% humidity_tag %}
 			</div>
