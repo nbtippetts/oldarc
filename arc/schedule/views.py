@@ -10,6 +10,26 @@ import json
 import threading
 from django.utils import timezone
 from pytz import utc
+import subprocess
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
+from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
+
+
+jobstores = {
+	'default': SQLAlchemyJobStore(url='postgresql+psycopg2://pi:rnautomations@db:5432/arc_db')
+# 'default': SQLAlchemyJobStore(url='postgresql+psycopg2://pi:rnautomations@localhost:5432/arc_db')
+}
+executors = {
+	'default': ThreadPoolExecutor(10),
+	'processpool': ProcessPoolExecutor(5)
+}
+job_defaults = {
+	'coalesce': False,
+	'max_instances': 25
+}
+scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=utc)
+
 
 def schedule(request):
 	start = datetime.now()
@@ -260,3 +280,21 @@ def relay_15():
 	except Exception as e:
 		print(e)
 		pass
+def update_app(request):
+	if request.method == 'POST':
+		subprocess.call(['sh', '../update_image.sh'])
+		form = ScheduleForm()
+		context = {
+			'form': form
+		}
+		return render(request, 'schedule.html',context)
+	else:
+		form = ScheduleForm()
+	context = {
+		'form': form
+	}
+	return render(request, 'schedule.html',context)
+
+scheduler.add_job(relay_14,'interval',seconds=5,id='button_relay_job_id_14', max_instances=1, replace_existing=True)
+scheduler.add_job(relay_15,'interval',seconds=4,id='button_relay_job_id_15', max_instances=1, replace_existing=True)
+scheduler.start()
