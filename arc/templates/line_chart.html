@@ -19,13 +19,13 @@
 		data: {
 			labels: [{% for d in data %} "{{ d.created_at }}", {% endfor %}],
 			datasets: [{
-				label: 'Humidity %',
+				label: 'Humidity',
 				data: [{% for hum in data %} "{{ hum.humidity }}", {% endfor %}],
 				pointBackgroundColor: 'rgb(255, 99, 132)',
 				fill: false,
 				backgroundColor: 'grey'
 			}, {
-				label: 'Temp *F',
+				label: "Temperature",
 				data: [{% for t in data %} "{{ t.temp }}", {% endfor %}],
 				pointBackgroundColor: 'rgb(54, 162, 235)',
 				fill: false,

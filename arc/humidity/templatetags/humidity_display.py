@@ -47,6 +47,7 @@ def current_hum_temp():
 		pass
 	return {
 		'humidity_value':current_values.humidity_value,
+		'buffer_value':current_values.buffer_value,
 		'temp_value':current_values.temp_value,}
 
 @register.inclusion_tag('log_data.html')

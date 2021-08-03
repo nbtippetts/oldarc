@@ -20,6 +20,7 @@ Django==3.2.4
 django-bootstrap-datepicker-plus==3.0.5
 django-bootstrap4==2.2.0
 django-chartjs==2.2.1
+django-jquery
 django-crispy-forms==1.9.2
 django-forms-bootstrap==3.1.0
 django-timedeltafield==0.7.10

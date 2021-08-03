@@ -58,7 +58,7 @@
 		<div id="chart_tit" class="card shadow mb-4">
 			<!-- Card Header - Dropdown -->
 			<div class="card-header py-3 d-flex flex-row align-items-center justify-content-around">
-				<h6 class="m-0 font-weight-bold" style="color: #343d46;">Temperature/Humidity Overview</h6>
+				<h6 class="m-0 font-weight-bold" style="color: #343d46;">Temperature-Humidity Overview</h6>
 			</div>
 			<div class="h5 mb-0 font-weight-bold text-gray-800">{% show_temp_humidity %}</div>
 			<!-- Card Body -->
@@ -79,21 +79,6 @@
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
 					style="padding-bottom: 0px;">
 					<h6 class="m-0 font-weight-bold" style="color: #343d46;">Humidity And Temperature Logs</h6>
-				</div>
-				<!-- Card Body -->
-				<div class="card-body">
-					<table class="table table-bordered" style="margin-top: 0px;">
-						
-						<tbody>
-							{% for d in data %}
-							<tr>
-								<td style="font-size: 14px;">{{ d.humidity }}</td>
-								<td style="font-size: 14px;">{{ d.temp }}</td>
-								<td style="font-size: 14px;">{{ d.created_at }}</td>
-							</tr>
-							{% endfor %}
-						</tbody>
-					</table>
 				</div>
 				{% log_data %}
 			</div>

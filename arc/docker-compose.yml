@@ -3,7 +3,8 @@ version: '3'
 services:
   web:
     restart: always
-    build: ./arc
+    build: .
+    image: noahtippetts/arc
     command: bash -c "while !</dev/tcp/db/5432; do sleep 1; done; python /arc/manage.py makemigrations && python /arc/manage.py migrate --noinput && python /arc/manage.py collectstatic --noinput && gunicorn arc.wsgi:application --bind 0.0.0.0:8000"
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
@@ -12,7 +13,7 @@ services:
     expose:
       - 8000
     volumes:
-      - ./arc:/arc
+      - .:/arc
       - static_volume:/arc/static  # <-- bind the static volume
       - media_volume:/arc/media  # <-- bind the media volume
     networks:  # <-- here
@@ -26,7 +27,7 @@ services:
     restart: always
     build: ./nginx
     volumes:
-      - ./arc:/arc
+      - .:/arc
       - static_volume:/arc/static  # <-- bind the static volume
       - media_volume:/arc/media  # <-- bind the media volume
     ports:

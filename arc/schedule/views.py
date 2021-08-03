@@ -10,26 +10,6 @@ import json
 import threading
 from django.utils import timezone
 from pytz import utc
-import atexit
-from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
-from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
-
-
-jobstores = {
-  'default': SQLAlchemyJobStore(url='postgresql+psycopg2://pi:rnautomations@db:5432/arc_db')
-# 'default': SQLAlchemyJobStore(url='postgresql+psycopg2://pi:rnautomations@localhost:5432/arc_db')
-}
-executors = {
-  'default': ThreadPoolExecutor(10),
-  'processpool': ProcessPoolExecutor(5)
-}
-job_defaults = {
-  'coalesce': True,
-  'max_instances': 25
-}
-scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=utc)
-
 
 def schedule(request):
 	start = datetime.now()
@@ -108,7 +88,7 @@ def update_schedule(request):
 				set_schedule.save()
 		
 			schedule_job_id = f'update_schedule_job_id_{gpio_pin}'
-			scheduler.add_job(schedule_relay, 'interval', seconds=schedule_interval.seconds,start_date=start_dt, args=[schedule_duration,gpio_pin,False,schedule_interval.seconds], id=schedule_job_id, max_instances=2, replace_existing=True)
+			scheduler.add_job(schedule_relay, 'interval', seconds=schedule_interval.seconds,start_date=start_dt, args=[schedule_duration,gpio_pin,False,schedule_interval.seconds], id=schedule_job_id,max_instances=10, replace_existing=True)
 			context = {
 				'form': form
 			}
@@ -211,7 +191,7 @@ def relay_on_off(request):
 	}
 	return render(request, 'schedule.html',form)
 
-def relay_14(stats):
+def relay_14():
 	try:
 		relay = gpiozero.OutputDevice(14, active_high=False, initial_value=False)
 		while True:
@@ -246,7 +226,7 @@ def relay_14(stats):
 		print(e)
 		pass
 
-def relay_15(stats):
+def relay_15():
 	try:
 		relay = gpiozero.OutputDevice(15, active_high=False, initial_value=False)
 		while True:
@@ -280,12 +260,3 @@ def relay_15(stats):
 	except Exception as e:
 		print(e)
 		pass
-
-scheduler.add_job(relay_14,'interval',seconds=8,args=[False],id='button_relay_job_id_14', max_instances=1, replace_existing=True)
-scheduler.add_job(relay_15,'interval',seconds=9,args=[False],id='button_relay_job_id_15', max_instances=1, replace_existing=True)
-scheduler.start()
-
-# @atexit.register
-# def goodbye():
-# 	print('shut down scheduler')
-# 	scheduler.shutdown()
